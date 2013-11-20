@@ -79,11 +79,11 @@ class RC4 extends Base {
     /**
      * Toggles the internal implementation
      */
-    const CRYPT_RC4_MODE_INTERNAL = \PhpSecLib\Crypt\Base::CRYPT_MODE_INTERNAL;
+    const CRYPT_RC4_MODE_INTERNAL = Base::CRYPT_MODE_INTERNAL;
     /**
      * Toggles the mcrypt implementation
      */
-    const CRYPT_RC4_MODE_MCRYPT = \PhpSecLib\Crypt\Base::CRYPT_MODE_MCRYPT;
+    const CRYPT_RC4_MODE_MCRYPT = Base::CRYPT_MODE_MCRYPT;
     /**#@-*/
 
     /**#@+
@@ -173,7 +173,7 @@ class RC4 extends Base {
      */
     function __construct()
     {
-        parent::__construct(\PhpSecLib\Crypt\Base::CRYPT_MODE_STREAM);
+        parent::__construct(Base::CRYPT_MODE_STREAM);
     }
 
     /**
@@ -225,10 +225,10 @@ class RC4 extends Base {
      */
     function encrypt($plaintext)
     {
-        if ($this->engine == \PhpSecLib\Crypt\Base::CRYPT_MODE_MCRYPT) {
+        if ($this->engine == Base::CRYPT_MODE_MCRYPT) {
             return parent::encrypt($plaintext);
         }
-        return $this->_crypt($plaintext, \PhpSecLib\Crypt\RC4::CRYPT_RC4_ENCRYPT);
+        return $this->_crypt($plaintext, RC4::CRYPT_RC4_ENCRYPT);
     }
 
     /**
@@ -245,10 +245,10 @@ class RC4 extends Base {
      */
     function decrypt($ciphertext)
     {
-        if ($this->engine == \PhpSecLib\Crypt\Base::CRYPT_MODE_MCRYPT) {
+        if ($this->engine == Base::CRYPT_MODE_MCRYPT) {
             return parent::decrypt($ciphertext);
         }
-        return $this->_crypt($ciphertext, \PhpSecLib\Crypt\RC4::CRYPT_RC4_DECRYPT);
+        return $this->_crypt($ciphertext, RC4::CRYPT_RC4_DECRYPT);
     }
 
 
@@ -275,7 +275,7 @@ class RC4 extends Base {
         }
 
         $this->stream = array();
-        $this->stream[\PhpSecLib\Crypt\RC4::CRYPT_RC4_DECRYPT] = $this->stream[\PhpSecLib\Crypt\RC4::CRYPT_RC4_ENCRYPT] = array(
+        $this->stream[RC4::CRYPT_RC4_DECRYPT] = $this->stream[RC4::CRYPT_RC4_ENCRYPT] = array(
             0, // index $i
             0, // index $j
             $keyStream

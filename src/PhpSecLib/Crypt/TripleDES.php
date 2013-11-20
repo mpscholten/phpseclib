@@ -76,7 +76,7 @@ class TripleDES extends DES {
      *
      * Outer chaining is used by SSH-2 and when the mode is set to \PhpSecLib\Crypt\DES::CRYPT_DES_MODE_CBC.
      */
-    const CRYPT_DES_MODE_CBC3 = \PhpSecLib\Crypt\DES::CRYPT_DES_MODE_CBC;
+    const CRYPT_DES_MODE_CBC3 = DES::CRYPT_DES_MODE_CBC;
 
     /**
      * The default password key_size used by setPassword()
@@ -182,20 +182,20 @@ class TripleDES extends DES {
      * @param optional Integer $mode
      * @access public
      */
-    function __construct($mode = \PhpSecLib\Crypt\DES::CRYPT_DES_MODE_CBC)
+    function __construct($mode = DES::CRYPT_DES_MODE_CBC)
     {
         switch ($mode) {
             // In case of \PhpSecLib\Crypt\TripleDES::CRYPT_DES_MODE_3CBC, we init as \PhpSecLib\Crypt\DES::CRYPT_DES_MODE_CBC
             // and additional flag us internally as 3CBC
             case \PhpSecLib\Crypt\TripleDES::CRYPT_DES_MODE_3CBC:
-                parent::__construct(\PhpSecLib\Crypt\DES::CRYPT_DES_MODE_CBC);
+                parent::__construct(DES::CRYPT_DES_MODE_CBC);
                 $this->mode_3cbc = true;
 
                 // This three $des'es will do the 3CBC work (if $key > 64bits)
                 $this->des = array(
-                    new DES(\PhpSecLib\Crypt\DES::CRYPT_DES_MODE_CBC),
-                    new DES(\PhpSecLib\Crypt\DES::CRYPT_DES_MODE_CBC),
-                    new DES(\PhpSecLib\Crypt\DES::CRYPT_DES_MODE_CBC),
+                    new DES(DES::CRYPT_DES_MODE_CBC),
+                    new DES(DES::CRYPT_DES_MODE_CBC),
+                    new DES(DES::CRYPT_DES_MODE_CBC),
                 );
 
                 // we're going to be doing the padding, ourselves, so disable it in the DES objects

@@ -85,31 +85,31 @@ class AES extends Rijndael {
      *
      * @link http://en.wikipedia.org/wiki/Block_cipher_modes_of_operation#Counter_.28CTR.29
      */
-    const CRYPT_AES_MODE_CTR = \PhpSecLib\Crypt\Base::CRYPT_MODE_CTR;
+    const CRYPT_AES_MODE_CTR = Base::CRYPT_MODE_CTR;
     /**
      * Encrypt / decrypt using the Electronic Code Book mode.
      *
      * @link http://en.wikipedia.org/wiki/Block_cipher_modes_of_operation#Electronic_codebook_.28ECB.29
      */
-    const CRYPT_AES_MODE_ECB = \PhpSecLib\Crypt\Base::CRYPT_MODE_ECB;
+    const CRYPT_AES_MODE_ECB = Base::CRYPT_MODE_ECB;
     /**
      * Encrypt / decrypt using the Code Book Chaining mode.
      *
      * @link http://en.wikipedia.org/wiki/Block_cipher_modes_of_operation#Cipher-block_chaining_.28CBC.29
      */
-    const CRYPT_AES_MODE_CBC = \PhpSecLib\Crypt\Base::CRYPT_MODE_CBC;
+    const CRYPT_AES_MODE_CBC = Base::CRYPT_MODE_CBC;
     /**
      * Encrypt / decrypt using the Cipher Feedback mode.
      *
      * @link http://en.wikipedia.org/wiki/Block_cipher_modes_of_operation#Cipher_feedback_.28CFB.29
      */
-    const CRYPT_AES_MODE_CFB = \PhpSecLib\Crypt\Base::CRYPT_MODE_CFB;
+    const CRYPT_AES_MODE_CFB = Base::CRYPT_MODE_CFB;
     /**
      * Encrypt / decrypt using the Cipher Feedback mode.
      *
      * @link http://en.wikipedia.org/wiki/Block_cipher_modes_of_operation#Output_feedback_.28OFB.29
      */
-    const CRYPT_AES_MODE_OFB = \PhpSecLib\Crypt\Base::CRYPT_MODE_OFB;
+    const CRYPT_AES_MODE_OFB = Base::CRYPT_MODE_OFB;
     /**#@-*/
 
     /**#@+
@@ -119,11 +119,11 @@ class AES extends Rijndael {
     /**
      * Toggles the internal implementation
      */
-    const CRYPT_AES_MODE_INTERNAL = \PhpSecLib\Crypt\Base::CRYPT_MODE_INTERNAL;
+    const CRYPT_AES_MODE_INTERNAL = Base::CRYPT_MODE_INTERNAL;
     /**
      * Toggles the mcrypt implementation
      */
-    const CRYPT_AES_MODE_MCRYPT = \PhpSecLib\Crypt\Base::CRYPT_MODE_MCRYPT;
+    const CRYPT_AES_MODE_MCRYPT = Base::CRYPT_MODE_MCRYPT;
     /**#@-*/
 
     /**
@@ -159,7 +159,7 @@ class AES extends Rijndael {
      * @param optional Integer $mode
      * @access public
      */
-    function __construct($mode = \PhpSecLib\Crypt\AES::CRYPT_AES_MODE_CBC)
+    function __construct($mode = AES::CRYPT_AES_MODE_CBC)
     {
         parent::__construct($mode);
     }

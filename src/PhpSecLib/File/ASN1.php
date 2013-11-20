@@ -48,6 +48,8 @@ namespace PhpSecLib\File;
  * @access private
  * @link http://www.itu.int/ITU-T/studygroups/com17/languages/X.690-0207.pdf#page=12
  */
+use PhpSecLib\Math\BigInteger;
+
 define('FILE_ASN1_CLASS_UNIVERSAL',        0);
 define('FILE_ASN1_CLASS_APPLICATION',      1);
 define('FILE_ASN1_CLASS_CONTEXT_SPECIFIC', 2);
@@ -377,7 +379,7 @@ class ASN1 {
                     break;
                 case FILE_ASN1_TYPE_INTEGER:
                 case FILE_ASN1_TYPE_ENUMERATED:
-                    $current['content'] = new Math_BigInteger($content, -256);
+                    $current['content'] = new BigInteger($content, -256);
                     break;
                 case FILE_ASN1_TYPE_REAL: // not currently supported
                     return false;
@@ -767,7 +769,7 @@ class ASN1 {
             case FILE_ASN1_TYPE_ENUMERATED:
                 $temp = $decoded['content'];
                 if (isset($mapping['implicit'])) {
-                    $temp = new Math_BigInteger($decoded['content'], -256);
+                    $temp = new BigInteger($decoded['content'], -256);
                 }
                 if (isset($mapping['mapping'])) {
                     $temp = (int) $temp->toString();
@@ -950,7 +952,7 @@ class ASN1 {
                     if ($value === false) {
                         return false;
                     }
-                    $value = new Math_BigInteger($value);
+                    $value = new BigInteger($value);
                     $value = $value->toBytes(true);
                 }
                 if (!strlen($value)) {
@@ -1031,7 +1033,7 @@ class ASN1 {
                     case !isset($source):
                         return $this->_encode_der(NULL, array('type' => FILE_ASN1_TYPE_NULL) + $mapping, NULL, $special);
                     case is_int($source):
-                    case is_object($source) && strtolower(get_class($source)) == 'math_biginteger':
+                    case is_object($source) && strtolower(get_class($source)) == 'BigInteger':
                         return $this->_encode_der($source, array('type' => FILE_ASN1_TYPE_INTEGER) + $mapping, NULL, $special);
                     case is_float($source):
                         return $this->_encode_der($source, array('type' => FILE_ASN1_TYPE_REAL) + $mapping, NULL, $special);

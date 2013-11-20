@@ -52,6 +52,9 @@ namespace PhpSecLib\File;
  *
  * @access public
  */
+use PhpSecLib\Crypt\RSA;
+use PhpSecLib\Math\BigInteger;
+
 define('FILE_X509_VALIDATE_SIGNATURE_BY_CA', 1);
 
 /**#@+
@@ -963,7 +966,7 @@ class X509 {
                                  'constant' => 0,
                                  'optional' => true,
                                  'implicit' => true,
-                                 'default' => new Math_BigInteger(0)
+                                 'default' => new BigInteger(0)
                              ) + $BaseDistance,
                 'maximum' => array(
                                  'constant' => 1,
@@ -2112,7 +2115,7 @@ class X509 {
     {
         switch ($publicKeyAlgorithm) {
             case 'rsaEncryption':
-                $rsa = new Crypt_RSA();
+                $rsa = new RSA();
                 $rsa->loadKey($publicKey);
 
                 switch ($signatureAlgorithm) {
@@ -2124,7 +2127,7 @@ class X509 {
                     case 'sha384WithRSAEncryption':
                     case 'sha512WithRSAEncryption':
                         $rsa->setHash(preg_replace('#WithRSAEncryption$#', '', $signatureAlgorithm));
-                        $rsa->setSignatureMode(\PhpSecLib\Crypt\RSA::CRYPT_RSA_SIGNATURE_PKCS1);
+                        $rsa->setSignatureMode(RSA::RSA_SIGNATURE_PKCS1);
                         if (!@$rsa->verify($signatureSubject, $signature)) {
                             return false;
                         }
@@ -2776,7 +2779,7 @@ class X509 {
 
         switch ($keyinfo['algorithm']['algorithm']) {
             case 'rsaEncryption':
-                $publicKey = new Crypt_RSA();
+                $publicKey = new RSA();
                 $publicKey->loadKey($key);
                 $publicKey->setPublicKey();
                 break;
@@ -2846,7 +2849,7 @@ class X509 {
 
         switch ($algorithm) {
             case 'rsaEncryption':
-                $this->publicKey = new Crypt_RSA();
+                $this->publicKey = new RSA();
                 $this->publicKey->loadKey($key);
                 $this->publicKey->setPublicKey();
                 break;
@@ -2968,7 +2971,7 @@ class X509 {
 
         switch ($algorithm) {
             case 'rsaEncryption':
-                $this->publicKey = new Crypt_RSA();
+                $this->publicKey = new RSA();
                 $this->publicKey->loadKey($key);
                 $this->publicKey->setPublicKey();
                 break;
@@ -3153,7 +3156,7 @@ class X509 {
 
             $startDate = !empty($this->startDate) ? $this->startDate : @date('D, d M y H:i:s O');
             $endDate = !empty($this->endDate) ? $this->endDate : @date('D, d M y H:i:s O', strtotime('+1 year'));
-            $serialNumber = !empty($this->serialNumber) ? $this->serialNumber : new Math_BigInteger();
+            $serialNumber = !empty($this->serialNumber) ? $this->serialNumber : new BigInteger();
 
             $this->currentCert = array(
                 'tbsCertificate' =>
@@ -3379,7 +3382,7 @@ class X509 {
         }
         else {
             $crlNumber = $this->getExtension('id-ce-cRLNumber');
-            $crlNumber = $crlNumber !== false ? $crlNumber->add(new Math_BigInteger(1)) : NULL;
+            $crlNumber = $crlNumber !== false ? $crlNumber->add(new BigInteger(1)) : NULL;
         }
 
         $this->removeExtension('id-ce-authorityKeyIdentifier');
@@ -3466,7 +3469,7 @@ class X509 {
     function _sign($key, $signatureAlgorithm)
     {
         switch (strtolower(get_class($key))) {
-            case 'crypt_rsa':
+            case 'RSA':
                 switch ($signatureAlgorithm) {
                     case 'md2WithRSAEncryption':
                     case 'md5WithRSAEncryption':
@@ -3476,7 +3479,7 @@ class X509 {
                     case 'sha384WithRSAEncryption':
                     case 'sha512WithRSAEncryption':
                         $key->setHash(preg_replace('#WithRSAEncryption$#', '', $signatureAlgorithm));
-                        $key->setSignatureMode(\PhpSecLib\Crypt\RSA::CRYPT_RSA_SIGNATURE_PKCS1);
+                        $key->setSignatureMode(RSA::RSA_SIGNATURE_PKCS1);
 
                         $this->currentCert['signature'] = base64_encode("\0" . $key->sign($this->signatureSubject));
                         return $this->currentCert;
@@ -3531,7 +3534,7 @@ class X509 {
      */
     function setSerialNumber($serial, $base = -256)
     {
-        $this->serialNumber = new Math_BigInteger($serial, $base);
+        $this->serialNumber = new BigInteger($serial, $base);
     }
 
     /**
@@ -4039,7 +4042,7 @@ class X509 {
                 }
                 $raw = base64_decode($raw);
                 // If the key is private, compute identifier from its corresponding public key.
-                $key = new Crypt_RSA();
+                $key = new RSA();
                 if (!$key->loadKey($raw)) {
                     return false;   // Not an unencrypted RSA key.
                 }
@@ -4060,7 +4063,7 @@ class X509 {
                 }
                 return false;
             default: // Should be a key object (i.e.: RSA).
-                $key = $key->getPublicKey(\PhpSecLib\Crypt\RSA::\PhpSecLib\Crypt\RSA::CRYPT_RSA_PUBLIC_FORMAT_PKCS1_RAW);
+                $key = $key->getPublicKey(RSA::CRYPT_RSA_PUBLIC_FORMAT_PKCS1_RAW);
                 break;
         }
 
@@ -4092,13 +4095,13 @@ class X509 {
         }
 
         switch (strtolower(get_class($this->publicKey))) {
-            case 'crypt_rsa':
+            case 'RSA':
                 // the following two return statements do the same thing. i dunno.. i just prefer the later for some reason.
                 // the former is a good example of how to do fuzzing on the public key
                 //return new File_ASN1_Element(base64_decode(preg_replace('#-.+-|[\r\n]#', '', $this->publicKey->getPublicKey())));
                 return array(
                     'algorithm' => array('algorithm' => 'rsaEncryption'),
-                    'subjectPublicKey' => $this->publicKey->getPublicKey(\PhpSecLib\Crypt\RSA::\PhpSecLib\Crypt\RSA::CRYPT_RSA_PUBLIC_FORMAT_PKCS1_RAW)
+                    'subjectPublicKey' => $this->publicKey->getPublicKey(RSA::CRYPT_RSA_PUBLIC_FORMAT_PKCS1_RAW)
                 );
             default:
                 return false;
@@ -4172,7 +4175,7 @@ class X509 {
      */
     function _revokedCertificate(&$rclist, $serial, $create = false)
     {
-        $serial = new Math_BigInteger($serial);
+        $serial = new BigInteger($serial);
 
         foreach ($rclist as $i => $rc) {
             if (!($serial->compare($rc['userCertificate']))) {

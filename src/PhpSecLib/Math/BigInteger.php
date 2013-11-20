@@ -263,13 +263,13 @@ class BigInteger {
         if ( !defined('MATH_BIGINTEGER_MODE') ) {
             switch (true) {
                 case extension_loaded('gmp'):
-                    define('MATH_BIGINTEGER_MODE', \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MODE_GMP);
+                    define('MATH_BIGINTEGER_MODE', BigInteger::MATH_BIGINTEGER_MODE_GMP);
                     break;
                 case extension_loaded('bcmath'):
-                    define('MATH_BIGINTEGER_MODE', \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MODE_BCMATH);
+                    define('MATH_BIGINTEGER_MODE', BigInteger::MATH_BIGINTEGER_MODE_BCMATH);
                     break;
                 default:
-                    define('MATH_BIGINTEGER_MODE', \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MODE_INTERNAL);
+                    define('MATH_BIGINTEGER_MODE', BigInteger::MATH_BIGINTEGER_MODE_INTERNAL);
             }
         }
 
@@ -305,7 +305,7 @@ class BigInteger {
             define('PHP_INT_SIZE', 4);
         }
 
-        if (!defined('MATH_BIGINTEGER_BASE') && MATH_BIGINTEGER_MODE == \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MODE_INTERNAL) {
+        if (!defined('MATH_BIGINTEGER_BASE') && MATH_BIGINTEGER_MODE == BigInteger::MATH_BIGINTEGER_MODE_INTERNAL) {
             switch (PHP_INT_SIZE) {
                 case 8: // use 64-bit integers if int size is 8 bytes
                     define('MATH_BIGINTEGER_BASE',       31);
@@ -335,14 +335,14 @@ class BigInteger {
         }
 
         switch ( MATH_BIGINTEGER_MODE ) {
-            case \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MODE_GMP:
+            case BigInteger::MATH_BIGINTEGER_MODE_GMP:
                 if (is_resource($x) && get_resource_type($x) == 'GMP integer') {
                     $this->value = $x;
                     return;
                 }
                 $this->value = gmp_init(0);
                 break;
-            case \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MODE_BCMATH:
+            case BigInteger::MATH_BIGINTEGER_MODE_BCMATH:
                 $this->value = '0';
                 break;
             default:
@@ -363,11 +363,11 @@ class BigInteger {
                 }
             case  256:
                 switch ( MATH_BIGINTEGER_MODE ) {
-                    case \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MODE_GMP:
+                    case BigInteger::MATH_BIGINTEGER_MODE_GMP:
                         $sign = $this->is_negative ? '-' : '';
                         $this->value = gmp_init($sign . '0x' . bin2hex($x));
                         break;
-                    case \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MODE_BCMATH:
+                    case BigInteger::MATH_BIGINTEGER_MODE_BCMATH:
                         // round $len to the nearest 4 (thanks, DavidMJ!)
                         $len = (strlen($x) + 3) & 0xFFFFFFFC;
 
@@ -391,7 +391,7 @@ class BigInteger {
                 }
 
                 if ($this->is_negative) {
-                    if (MATH_BIGINTEGER_MODE != \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MODE_INTERNAL) {
+                    if (MATH_BIGINTEGER_MODE != BigInteger::MATH_BIGINTEGER_MODE_INTERNAL) {
                         $this->is_negative = false;
                     }
                     $temp = $this->add(new BigInteger('-1'));
@@ -414,12 +414,12 @@ class BigInteger {
                 }
 
                 switch ( MATH_BIGINTEGER_MODE ) {
-                    case \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MODE_GMP:
+                    case BigInteger::MATH_BIGINTEGER_MODE_GMP:
                         $temp = $this->is_negative ? '-0x' . $x : '0x' . $x;
                         $this->value = gmp_init($temp);
                         $this->is_negative = false;
                         break;
-                    case \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MODE_BCMATH:
+                    case BigInteger::MATH_BIGINTEGER_MODE_BCMATH:
                         $x = ( strlen($x) & 1 ) ? '0' . $x : $x;
                         $temp = new BigInteger(pack('H*', $x), 256);
                         $this->value = $this->is_negative ? '-' . $temp->value : $temp->value;
@@ -444,10 +444,10 @@ class BigInteger {
                 $x = preg_replace('#(?<!^)(?:-).*|(?<=^|-)0*|[^-0-9].*#', '', $x);
 
                 switch ( MATH_BIGINTEGER_MODE ) {
-                    case \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MODE_GMP:
+                    case BigInteger::MATH_BIGINTEGER_MODE_GMP:
                         $this->value = gmp_init($x);
                         break;
-                    case \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MODE_BCMATH:
+                    case BigInteger::MATH_BIGINTEGER_MODE_BCMATH:
                         // explicitly casting $x to a string is necessary, here, since doing $x[0] on -1 yields different
                         // results then doing it on '-1' does (modInverse does $x[0])
                         $this->value = $x === '-' ? '0' : (string) $x;
@@ -549,7 +549,7 @@ class BigInteger {
         }
 
         switch ( MATH_BIGINTEGER_MODE ) {
-            case \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MODE_GMP:
+            case BigInteger::MATH_BIGINTEGER_MODE_GMP:
                 if (gmp_cmp($this->value, gmp_init(0)) == 0) {
                     return $this->precision > 0 ? str_repeat(chr(0), ($this->precision + 1) >> 3) : '';
                 }
@@ -561,7 +561,7 @@ class BigInteger {
                 return $this->precision > 0 ?
                     substr(str_pad($temp, $this->precision >> 3, chr(0), STR_PAD_LEFT), -($this->precision >> 3)) :
                     ltrim($temp, chr(0));
-            case \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MODE_BCMATH:
+            case BigInteger::MATH_BIGINTEGER_MODE_BCMATH:
                 if ($this->value === '0') {
                     return $this->precision > 0 ? str_repeat(chr(0), ($this->precision + 1) >> 3) : '';
                 }
@@ -690,9 +690,9 @@ class BigInteger {
     function toString()
     {
         switch ( MATH_BIGINTEGER_MODE ) {
-            case \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MODE_GMP:
+            case BigInteger::MATH_BIGINTEGER_MODE_GMP:
                 return gmp_strval($this->value);
-            case \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MODE_BCMATH:
+            case BigInteger::MATH_BIGINTEGER_MODE_BCMATH:
                 if ($this->value === '0') {
                     return '0';
                 }
@@ -847,12 +847,12 @@ class BigInteger {
     function add($y)
     {
         switch ( MATH_BIGINTEGER_MODE ) {
-            case \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MODE_GMP:
+            case BigInteger::MATH_BIGINTEGER_MODE_GMP:
                 $temp = new BigInteger();
                 $temp->value = gmp_add($this->value, $y->value);
 
                 return $this->_normalize($temp);
-            case \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MODE_BCMATH:
+            case BigInteger::MATH_BIGINTEGER_MODE_BCMATH:
                 $temp = new BigInteger();
                 $temp->value = bcadd($this->value, $y->value, 0);
 
@@ -862,8 +862,8 @@ class BigInteger {
         $temp = $this->_add($this->value, $this->is_negative, $y->value, $y->is_negative);
 
         $result = new BigInteger();
-        $result->value = $temp[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE];
-        $result->is_negative = $temp[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_SIGN];
+        $result->value = $temp[BigInteger::MATH_BIGINTEGER_VALUE];
+        $result->is_negative = $temp[BigInteger::MATH_BIGINTEGER_SIGN];
 
         return $this->_normalize($result);
     }
@@ -885,13 +885,13 @@ class BigInteger {
 
         if ($x_size == 0) {
             return array(
-                \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE => $y_value,
-                \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_SIGN => $y_negative
+                BigInteger::MATH_BIGINTEGER_VALUE => $y_value,
+                BigInteger::MATH_BIGINTEGER_SIGN => $y_negative
             );
         } else if ($y_size == 0) {
             return array(
-                \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE => $x_value,
-                \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_SIGN => $x_negative
+                BigInteger::MATH_BIGINTEGER_VALUE => $x_value,
+                BigInteger::MATH_BIGINTEGER_SIGN => $x_negative
             );
         }
 
@@ -899,13 +899,13 @@ class BigInteger {
         if ( $x_negative != $y_negative ) {
             if ( $x_value == $y_value ) {
                 return array(
-                    \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE => array(),
-                    \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_SIGN => false
+                    BigInteger::MATH_BIGINTEGER_VALUE => array(),
+                    BigInteger::MATH_BIGINTEGER_SIGN => false
                 );
             }
 
             $temp = $this->_subtract($x_value, false, $y_value, false);
-            $temp[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_SIGN] = $this->_compare($x_value, false, $y_value, false) > 0 ?
+            $temp[BigInteger::MATH_BIGINTEGER_SIGN] = $this->_compare($x_value, false, $y_value, false) > 0 ?
                                           $x_negative : $y_negative;
 
             return $temp;
@@ -948,8 +948,8 @@ class BigInteger {
         }
 
         return array(
-            \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE => $this->_trim($value),
-            \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_SIGN => $x_negative
+            BigInteger::MATH_BIGINTEGER_VALUE => $this->_trim($value),
+            BigInteger::MATH_BIGINTEGER_SIGN => $x_negative
         );
     }
 
@@ -978,12 +978,12 @@ class BigInteger {
     function subtract($y)
     {
         switch ( MATH_BIGINTEGER_MODE ) {
-            case \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MODE_GMP:
+            case BigInteger::MATH_BIGINTEGER_MODE_GMP:
                 $temp = new BigInteger();
                 $temp->value = gmp_sub($this->value, $y->value);
 
                 return $this->_normalize($temp);
-            case \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MODE_BCMATH:
+            case BigInteger::MATH_BIGINTEGER_MODE_BCMATH:
                 $temp = new BigInteger();
                 $temp->value = bcsub($this->value, $y->value, 0);
 
@@ -993,8 +993,8 @@ class BigInteger {
         $temp = $this->_subtract($this->value, $this->is_negative, $y->value, $y->is_negative);
 
         $result = new BigInteger();
-        $result->value = $temp[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE];
-        $result->is_negative = $temp[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_SIGN];
+        $result->value = $temp[BigInteger::MATH_BIGINTEGER_VALUE];
+        $result->is_negative = $temp[BigInteger::MATH_BIGINTEGER_SIGN];
 
         return $this->_normalize($result);
     }
@@ -1016,20 +1016,20 @@ class BigInteger {
 
         if ($x_size == 0) {
             return array(
-                \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE => $y_value,
-                \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_SIGN => !$y_negative
+                BigInteger::MATH_BIGINTEGER_VALUE => $y_value,
+                BigInteger::MATH_BIGINTEGER_SIGN => !$y_negative
             );
         } else if ($y_size == 0) {
             return array(
-                \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE => $x_value,
-                \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_SIGN => $x_negative
+                BigInteger::MATH_BIGINTEGER_VALUE => $x_value,
+                BigInteger::MATH_BIGINTEGER_SIGN => $x_negative
             );
         }
 
         // add, if appropriate (ie. -$x - +$y or +$x - -$y)
         if ( $x_negative != $y_negative ) {
             $temp = $this->_add($x_value, false, $y_value, false);
-            $temp[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_SIGN] = $x_negative;
+            $temp[BigInteger::MATH_BIGINTEGER_SIGN] = $x_negative;
 
             return $temp;
         }
@@ -1038,8 +1038,8 @@ class BigInteger {
 
         if ( !$diff ) {
             return array(
-                \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE => array(),
-                \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_SIGN => false
+                BigInteger::MATH_BIGINTEGER_VALUE => array(),
+                BigInteger::MATH_BIGINTEGER_SIGN => false
             );
         }
 
@@ -1084,8 +1084,8 @@ class BigInteger {
         }
 
         return array(
-            \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE => $this->_trim($x_value),
-            \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_SIGN => $x_negative
+            BigInteger::MATH_BIGINTEGER_VALUE => $this->_trim($x_value),
+            BigInteger::MATH_BIGINTEGER_SIGN => $x_negative
         );
     }
 
@@ -1113,12 +1113,12 @@ class BigInteger {
     function multiply($x)
     {
         switch ( MATH_BIGINTEGER_MODE ) {
-            case \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MODE_GMP:
+            case BigInteger::MATH_BIGINTEGER_MODE_GMP:
                 $temp = new BigInteger();
                 $temp->value = gmp_mul($this->value, $x->value);
 
                 return $this->_normalize($temp);
-            case \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MODE_BCMATH:
+            case BigInteger::MATH_BIGINTEGER_MODE_BCMATH:
                 $temp = new BigInteger();
                 $temp->value = bcmul($this->value, $x->value, 0);
 
@@ -1128,8 +1128,8 @@ class BigInteger {
         $temp = $this->_multiply($this->value, $this->is_negative, $x->value, $x->is_negative);
 
         $product = new BigInteger();
-        $product->value = $temp[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE];
-        $product->is_negative = $temp[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_SIGN];
+        $product->value = $temp[BigInteger::MATH_BIGINTEGER_VALUE];
+        $product->is_negative = $temp[BigInteger::MATH_BIGINTEGER_SIGN];
 
         return $this->_normalize($product);
     }
@@ -1158,16 +1158,16 @@ class BigInteger {
 
         if ( !$x_length || !$y_length ) { // a 0 is being multiplied
             return array(
-                \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE => array(),
-                \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_SIGN => false
+                BigInteger::MATH_BIGINTEGER_VALUE => array(),
+                BigInteger::MATH_BIGINTEGER_SIGN => false
             );
         }
 
         return array(
-            \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE => min($x_length, $y_length) < 2 * \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_KARATSUBA_CUTOFF ?
+            BigInteger::MATH_BIGINTEGER_VALUE => min($x_length, $y_length) < 2 * BigInteger::MATH_BIGINTEGER_KARATSUBA_CUTOFF ?
                 $this->_trim($this->_regularMultiply($x_value, $y_value)) :
                 $this->_trim($this->_karatsuba($x_value, $y_value)),
-            \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_SIGN => $x_negative != $y_negative
+            BigInteger::MATH_BIGINTEGER_SIGN => $x_negative != $y_negative
         );
     }
 
@@ -1249,7 +1249,7 @@ class BigInteger {
     {
         $m = min(count($x_value) >> 1, count($y_value) >> 1);
 
-        if ($m < \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_KARATSUBA_CUTOFF) {
+        if ($m < BigInteger::MATH_BIGINTEGER_KARATSUBA_CUTOFF) {
             return $this->_regularMultiply($x_value, $y_value);
         }
 
@@ -1263,17 +1263,17 @@ class BigInteger {
 
         $z1 = $this->_add($x1, false, $x0, false);
         $temp = $this->_add($y1, false, $y0, false);
-        $z1 = $this->_karatsuba($z1[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE], $temp[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE]);
+        $z1 = $this->_karatsuba($z1[BigInteger::MATH_BIGINTEGER_VALUE], $temp[BigInteger::MATH_BIGINTEGER_VALUE]);
         $temp = $this->_add($z2, false, $z0, false);
-        $z1 = $this->_subtract($z1, false, $temp[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE], false);
+        $z1 = $this->_subtract($z1, false, $temp[BigInteger::MATH_BIGINTEGER_VALUE], false);
 
         $z2 = array_merge(array_fill(0, 2 * $m, 0), $z2);
-        $z1[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE] = array_merge(array_fill(0, $m, 0), $z1[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE]);
+        $z1[BigInteger::MATH_BIGINTEGER_VALUE] = array_merge(array_fill(0, $m, 0), $z1[BigInteger::MATH_BIGINTEGER_VALUE]);
 
-        $xy = $this->_add($z2, false, $z1[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE], $z1[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_SIGN]);
-        $xy = $this->_add($xy[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE], $xy[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_SIGN], $z0, false);
+        $xy = $this->_add($z2, false, $z1[BigInteger::MATH_BIGINTEGER_VALUE], $z1[BigInteger::MATH_BIGINTEGER_SIGN]);
+        $xy = $this->_add($xy[BigInteger::MATH_BIGINTEGER_VALUE], $xy[BigInteger::MATH_BIGINTEGER_SIGN], $z0, false);
 
-        return $xy[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE];
+        return $xy[BigInteger::MATH_BIGINTEGER_VALUE];
     }
 
     /**
@@ -1285,7 +1285,7 @@ class BigInteger {
      */
     function _square($x = false)
     {
-        return count($x) < 2 * \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_KARATSUBA_CUTOFF ?
+        return count($x) < 2 * BigInteger::MATH_BIGINTEGER_KARATSUBA_CUTOFF ?
             $this->_trim($this->_baseSquare($x)) :
             $this->_trim($this->_karatsubaSquare($x));
     }
@@ -1344,7 +1344,7 @@ class BigInteger {
     {
         $m = count($value) >> 1;
 
-        if ($m < \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_KARATSUBA_CUTOFF) {
+        if ($m < BigInteger::MATH_BIGINTEGER_KARATSUBA_CUTOFF) {
             return $this->_baseSquare($value);
         }
 
@@ -1355,17 +1355,17 @@ class BigInteger {
         $z0 = $this->_karatsubaSquare($x0);
 
         $z1 = $this->_add($x1, false, $x0, false);
-        $z1 = $this->_karatsubaSquare($z1[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE]);
+        $z1 = $this->_karatsubaSquare($z1[BigInteger::MATH_BIGINTEGER_VALUE]);
         $temp = $this->_add($z2, false, $z0, false);
-        $z1 = $this->_subtract($z1, false, $temp[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE], false);
+        $z1 = $this->_subtract($z1, false, $temp[BigInteger::MATH_BIGINTEGER_VALUE], false);
 
         $z2 = array_merge(array_fill(0, 2 * $m, 0), $z2);
-        $z1[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE] = array_merge(array_fill(0, $m, 0), $z1[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE]);
+        $z1[BigInteger::MATH_BIGINTEGER_VALUE] = array_merge(array_fill(0, $m, 0), $z1[BigInteger::MATH_BIGINTEGER_VALUE]);
 
-        $xx = $this->_add($z2, false, $z1[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE], $z1[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_SIGN]);
-        $xx = $this->_add($xx[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE], $xx[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_SIGN], $z0, false);
+        $xx = $this->_add($z2, false, $z1[BigInteger::MATH_BIGINTEGER_VALUE], $z1[BigInteger::MATH_BIGINTEGER_SIGN]);
+        $xx = $this->_add($xx[BigInteger::MATH_BIGINTEGER_VALUE], $xx[BigInteger::MATH_BIGINTEGER_SIGN], $z0, false);
 
-        return $xx[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE];
+        return $xx[BigInteger::MATH_BIGINTEGER_VALUE];
     }
 
     /**
@@ -1400,7 +1400,7 @@ class BigInteger {
     function divide($y)
     {
         switch ( MATH_BIGINTEGER_MODE ) {
-            case \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MODE_GMP:
+            case BigInteger::MATH_BIGINTEGER_MODE_GMP:
                 $quotient = new BigInteger();
                 $remainder = new BigInteger();
 
@@ -1411,7 +1411,7 @@ class BigInteger {
                 }
 
                 return array($this->_normalize($quotient), $this->_normalize($remainder));
-            case \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MODE_BCMATH:
+            case BigInteger::MATH_BIGINTEGER_MODE_BCMATH:
                 $quotient = new BigInteger();
                 $remainder = new BigInteger();
 
@@ -1650,7 +1650,7 @@ class BigInteger {
             return $this->_normalize($temp->modPow($e, $n));
         }
 
-        if ( MATH_BIGINTEGER_MODE == \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MODE_GMP ) {
+        if ( MATH_BIGINTEGER_MODE == BigInteger::MATH_BIGINTEGER_MODE_GMP ) {
             $temp = new BigInteger();
             $temp->value = gmp_powm($this->value, $e->value, $n->value);
 
@@ -1697,7 +1697,7 @@ class BigInteger {
             }
         }
 
-        if ( MATH_BIGINTEGER_MODE == \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MODE_BCMATH ) {
+        if ( MATH_BIGINTEGER_MODE == BigInteger::MATH_BIGINTEGER_MODE_BCMATH ) {
                 $temp = new BigInteger();
                 $temp->value = bcpowmod($this->value, $e->value, $n->value, 0);
 
@@ -1722,11 +1722,11 @@ class BigInteger {
             return $this->_normalize($temp);
         }
 
-        return $this->_normalize($this->_slidingWindow($e, $n, \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_BARRETT));
+        return $this->_normalize($this->_slidingWindow($e, $n, BigInteger::MATH_BIGINTEGER_BARRETT));
 
         // is the modulo odd?
         if ( $n->value[0] & 1 ) {
-            return $this->_normalize($this->_slidingWindow($e, $n, \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MONTGOMERY));
+            return $this->_normalize($this->_slidingWindow($e, $n, BigInteger::MATH_BIGINTEGER_MONTGOMERY));
         }
         // if it's not, it's even
 
@@ -1747,8 +1747,8 @@ class BigInteger {
         $mod2->value = array(1);
         $mod2->_lshift($j);
 
-        $part1 = ( $mod1->value != array(1) ) ? $this->_slidingWindow($e, $mod1, \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MONTGOMERY) : new BigInteger();
-        $part2 = $this->_slidingWindow($e, $mod2, \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_POWEROF2);
+        $part1 = ( $mod1->value != array(1) ) ? $this->_slidingWindow($e, $mod1, BigInteger::MATH_BIGINTEGER_MONTGOMERY) : new BigInteger();
+        $part2 = $this->_slidingWindow($e, $mod2, BigInteger::MATH_BIGINTEGER_POWEROF2);
 
         $y1 = $mod2->modInverse($mod1);
         $y2 = $mod1->modInverse($mod2);
@@ -1872,24 +1872,24 @@ class BigInteger {
     function _reduce($x, $n, $mode)
     {
         switch ($mode) {
-            case \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MONTGOMERY:
+            case BigInteger::MATH_BIGINTEGER_MONTGOMERY:
                 return $this->_montgomery($x, $n);
-            case \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_BARRETT:
+            case BigInteger::MATH_BIGINTEGER_BARRETT:
                 return $this->_barrett($x, $n);
-            case \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_POWEROF2:
+            case BigInteger::MATH_BIGINTEGER_POWEROF2:
                 $lhs = new BigInteger();
                 $lhs->value = $x;
                 $rhs = new BigInteger();
                 $rhs->value = $n;
                 return $x->_mod2($n);
-            case \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_CLASSIC:
+            case BigInteger::MATH_BIGINTEGER_CLASSIC:
                 $lhs = new BigInteger();
                 $lhs->value = $x;
                 $rhs = new BigInteger();
                 $rhs->value = $n;
                 list(, $temp) = $lhs->divide($rhs);
                 return $temp->value;
-            case \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_NONE:
+            case BigInteger::MATH_BIGINTEGER_NONE:
                 return $x;
             default:
                 // an invalid $mode was provided
@@ -1908,7 +1908,7 @@ class BigInteger {
      */
     function _prepareReduce($x, $n, $mode)
     {
-        if ($mode == \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MONTGOMERY) {
+        if ($mode == BigInteger::MATH_BIGINTEGER_MONTGOMERY) {
             return $this->_prepMontgomery($x, $n);
         }
         return $this->_reduce($x, $n, $mode);
@@ -1927,11 +1927,11 @@ class BigInteger {
      */
     function _multiplyReduce($x, $y, $n, $mode)
     {
-        if ($mode == \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MONTGOMERY) {
+        if ($mode == BigInteger::MATH_BIGINTEGER_MONTGOMERY) {
             return $this->_montgomeryMultiply($x, $y, $n);
         }
         $temp = $this->_multiply($x, false, $y, false);
-        return $this->_reduce($temp[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE], $n, $mode);
+        return $this->_reduce($temp[BigInteger::MATH_BIGINTEGER_VALUE], $n, $mode);
     }
 
     /**
@@ -1946,7 +1946,7 @@ class BigInteger {
      */
     function _squareReduce($x, $n, $mode)
     {
-        if ($mode == \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MONTGOMERY) {
+        if ($mode == BigInteger::MATH_BIGINTEGER_MONTGOMERY) {
             return $this->_montgomeryMultiply($x, $x, $n);
         }
         return $this->_reduce($this->_square($x), $n, $mode);
@@ -1997,8 +1997,8 @@ class BigInteger {
     function _barrett($n, $m)
     {
         static $cache = array(
-            \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VARIABLE => array(),
-            \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_DATA => array()
+            BigInteger::MATH_BIGINTEGER_VARIABLE => array(),
+            BigInteger::MATH_BIGINTEGER_DATA => array()
         );
 
         $m_length = count($m);
@@ -2020,9 +2020,9 @@ class BigInteger {
 
         // n = 2 * m.length
 
-        if ( ($key = array_search($m, $cache[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VARIABLE])) === false ) {
-            $key = count($cache[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VARIABLE]);
-            $cache[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VARIABLE][] = $m;
+        if ( ($key = array_search($m, $cache[BigInteger::MATH_BIGINTEGER_VARIABLE])) === false ) {
+            $key = count($cache[BigInteger::MATH_BIGINTEGER_VARIABLE]);
+            $cache[BigInteger::MATH_BIGINTEGER_VARIABLE][] = $m;
 
             $lhs = new BigInteger();
             $lhs_value = &$lhs->value;
@@ -2035,12 +2035,12 @@ class BigInteger {
             $u = $u->value;
             $m1 = $m1->value;
 
-            $cache[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_DATA][] = array(
+            $cache[BigInteger::MATH_BIGINTEGER_DATA][] = array(
                 'u' => $u, // m.length >> 1 (technically (m.length >> 1) + 1)
                 'm1'=> $m1 // m.length
             );
         } else {
-            extract($cache[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_DATA][$key]);
+            extract($cache[BigInteger::MATH_BIGINTEGER_DATA][$key]);
         }
 
         $cutoff = $m_length + ($m_length >> 1);
@@ -2048,20 +2048,20 @@ class BigInteger {
         $msd = array_slice($n, $cutoff);    // m.length >> 1
         $lsd = $this->_trim($lsd);
         $temp = $this->_multiply($msd, false, $m1, false);
-        $n = $this->_add($lsd, false, $temp[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE], false); // m.length + (m.length >> 1) + 1
+        $n = $this->_add($lsd, false, $temp[BigInteger::MATH_BIGINTEGER_VALUE], false); // m.length + (m.length >> 1) + 1
 
         if ($m_length & 1) {
-            return $this->_regularBarrett($n[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE], $m);
+            return $this->_regularBarrett($n[BigInteger::MATH_BIGINTEGER_VALUE], $m);
         }
 
         // (m.length + (m.length >> 1) + 1) - (m.length - 1) == (m.length >> 1) + 2
-        $temp = array_slice($n[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE], $m_length - 1);
+        $temp = array_slice($n[BigInteger::MATH_BIGINTEGER_VALUE], $m_length - 1);
         // if even: ((m.length >> 1) + 2) + (m.length >> 1) == m.length + 2
         // if odd:  ((m.length >> 1) + 2) + (m.length >> 1) == (m.length - 1) + 2 == m.length + 1
         $temp = $this->_multiply($temp, false, $u, false);
         // if even: (m.length + 2) - ((m.length >> 1) + 1) = m.length - (m.length >> 1) + 1
         // if odd:  (m.length + 1) - ((m.length >> 1) + 1) = m.length - (m.length >> 1)
-        $temp = array_slice($temp[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE], ($m_length >> 1) + 1);
+        $temp = array_slice($temp[BigInteger::MATH_BIGINTEGER_VALUE], ($m_length >> 1) + 1);
         // if even: (m.length - (m.length >> 1) + 1) + m.length = 2 * m.length - (m.length >> 1) + 1
         // if odd:  (m.length - (m.length >> 1)) + m.length     = 2 * m.length - (m.length >> 1)
         $temp = $this->_multiply($temp, false, $m, false);
@@ -2070,13 +2070,13 @@ class BigInteger {
         // number from a m.length + (m.length >> 1) + 1 digit number.  ie. there'd be an extra digit and the while loop
         // following this comment would loop a lot (hence our calling _regularBarrett() in that situation).
 
-        $result = $this->_subtract($n[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE], false, $temp[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE], false);
+        $result = $this->_subtract($n[BigInteger::MATH_BIGINTEGER_VALUE], false, $temp[BigInteger::MATH_BIGINTEGER_VALUE], false);
 
-        while ($this->_compare($result[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE], $result[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_SIGN], $m, false) >= 0) {
-            $result = $this->_subtract($result[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE], $result[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_SIGN], $m, false);
+        while ($this->_compare($result[BigInteger::MATH_BIGINTEGER_VALUE], $result[BigInteger::MATH_BIGINTEGER_SIGN], $m, false) >= 0) {
+            $result = $this->_subtract($result[BigInteger::MATH_BIGINTEGER_VALUE], $result[BigInteger::MATH_BIGINTEGER_SIGN], $m, false);
         }
 
-        return $result[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE];
+        return $result[BigInteger::MATH_BIGINTEGER_VALUE];
     }
 
     /**
@@ -2094,8 +2094,8 @@ class BigInteger {
     function _regularBarrett($x, $n)
     {
         static $cache = array(
-            \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VARIABLE => array(),
-            \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_DATA => array()
+            BigInteger::MATH_BIGINTEGER_VARIABLE => array(),
+            BigInteger::MATH_BIGINTEGER_DATA => array()
         );
 
         $n_length = count($n);
@@ -2109,9 +2109,9 @@ class BigInteger {
             return $temp->value;
         }
 
-        if ( ($key = array_search($n, $cache[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VARIABLE])) === false ) {
-            $key = count($cache[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VARIABLE]);
-            $cache[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VARIABLE][] = $n;
+        if ( ($key = array_search($n, $cache[BigInteger::MATH_BIGINTEGER_VARIABLE])) === false ) {
+            $key = count($cache[BigInteger::MATH_BIGINTEGER_VARIABLE]);
+            $cache[BigInteger::MATH_BIGINTEGER_VARIABLE][] = $n;
             $lhs = new BigInteger();
             $lhs_value = &$lhs->value;
             $lhs_value = $this->_array_repeat(0, 2 * $n_length);
@@ -2119,15 +2119,15 @@ class BigInteger {
             $rhs = new BigInteger();
             $rhs->value = $n;
             list($temp, ) = $lhs->divide($rhs); // m.length
-            $cache[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_DATA][] = $temp->value;
+            $cache[BigInteger::MATH_BIGINTEGER_DATA][] = $temp->value;
         }
 
         // 2 * m.length - (m.length - 1) = m.length + 1
         $temp = array_slice($x, $n_length - 1);
         // (m.length + 1) + m.length = 2 * m.length + 1
-        $temp = $this->_multiply($temp, false, $cache[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_DATA][$key], false);
+        $temp = $this->_multiply($temp, false, $cache[BigInteger::MATH_BIGINTEGER_DATA][$key], false);
         // (2 * m.length + 1) - (m.length - 1) = m.length + 2
-        $temp = array_slice($temp[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE], $n_length + 1);
+        $temp = array_slice($temp[BigInteger::MATH_BIGINTEGER_VALUE], $n_length + 1);
 
         // m.length + 1
         $result = array_slice($x, 0, $n_length + 1);
@@ -2135,20 +2135,20 @@ class BigInteger {
         $temp = $this->_multiplyLower($temp, false, $n, false, $n_length + 1);
         // $temp == array_slice($temp->_multiply($temp, false, $n, false)->value, 0, $n_length + 1)
 
-        if ($this->_compare($result, false, $temp[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE], $temp[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_SIGN]) < 0) {
+        if ($this->_compare($result, false, $temp[BigInteger::MATH_BIGINTEGER_VALUE], $temp[BigInteger::MATH_BIGINTEGER_SIGN]) < 0) {
             $corrector_value = $this->_array_repeat(0, $n_length + 1);
             $corrector_value[] = 1;
             $result = $this->_add($result, false, $corrector_value, false);
-            $result = $result[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE];
+            $result = $result[BigInteger::MATH_BIGINTEGER_VALUE];
         }
 
         // at this point, we're subtracting a number with m.length + 1 digits from another number with m.length + 1 digits
-        $result = $this->_subtract($result, false, $temp[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE], $temp[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_SIGN]);
-        while ($this->_compare($result[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE], $result[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_SIGN], $n, false) > 0) {
-            $result = $this->_subtract($result[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE], $result[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_SIGN], $n, false);
+        $result = $this->_subtract($result, false, $temp[BigInteger::MATH_BIGINTEGER_VALUE], $temp[BigInteger::MATH_BIGINTEGER_SIGN]);
+        while ($this->_compare($result[BigInteger::MATH_BIGINTEGER_VALUE], $result[BigInteger::MATH_BIGINTEGER_SIGN], $n, false) > 0) {
+            $result = $this->_subtract($result[BigInteger::MATH_BIGINTEGER_VALUE], $result[BigInteger::MATH_BIGINTEGER_SIGN], $n, false);
         }
 
-        return $result[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE];
+        return $result[BigInteger::MATH_BIGINTEGER_VALUE];
     }
 
     /**
@@ -2172,8 +2172,8 @@ class BigInteger {
 
         if ( !$x_length || !$y_length ) { // a 0 is being multiplied
             return array(
-                \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE => array(),
-                \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_SIGN => false
+                BigInteger::MATH_BIGINTEGER_VALUE => array(),
+                BigInteger::MATH_BIGINTEGER_SIGN => false
             );
         }
 
@@ -2224,8 +2224,8 @@ class BigInteger {
         }
 
         return array(
-            \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE => $this->_trim($product_value),
-            \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_SIGN => $x_negative != $y_negative
+            BigInteger::MATH_BIGINTEGER_VALUE => $this->_trim($product_value),
+            BigInteger::MATH_BIGINTEGER_SIGN => $x_negative != $y_negative
         );
     }
 
@@ -2247,35 +2247,35 @@ class BigInteger {
     function _montgomery($x, $n)
     {
         static $cache = array(
-            \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VARIABLE => array(),
-            \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_DATA => array()
+            BigInteger::MATH_BIGINTEGER_VARIABLE => array(),
+            BigInteger::MATH_BIGINTEGER_DATA => array()
         );
 
-        if ( ($key = array_search($n, $cache[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VARIABLE])) === false ) {
-            $key = count($cache[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VARIABLE]);
-            $cache[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VARIABLE][] = $x;
-            $cache[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_DATA][] = $this->_modInverse67108864($n);
+        if ( ($key = array_search($n, $cache[BigInteger::MATH_BIGINTEGER_VARIABLE])) === false ) {
+            $key = count($cache[BigInteger::MATH_BIGINTEGER_VARIABLE]);
+            $cache[BigInteger::MATH_BIGINTEGER_VARIABLE][] = $x;
+            $cache[BigInteger::MATH_BIGINTEGER_DATA][] = $this->_modInverse67108864($n);
         }
 
         $k = count($n);
 
-        $result = array(\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE => $x);
+        $result = array(BigInteger::MATH_BIGINTEGER_VALUE => $x);
 
         for ($i = 0; $i < $k; ++$i) {
-            $temp = $result[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE][$i] * $cache[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_DATA][$key];
+            $temp = $result[BigInteger::MATH_BIGINTEGER_VALUE][$i] * $cache[BigInteger::MATH_BIGINTEGER_DATA][$key];
             $temp = (int) ($temp - MATH_BIGINTEGER_BASE_FULL * ((int) ($temp / MATH_BIGINTEGER_BASE_FULL)));
             $temp = $this->_regularMultiply(array($temp), $n);
             $temp = array_merge($this->_array_repeat(0, $i), $temp);
-            $result = $this->_add($result[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE], false, $temp, false);
+            $result = $this->_add($result[BigInteger::MATH_BIGINTEGER_VALUE], false, $temp, false);
         }
 
-        $result[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE] = array_slice($result[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE], $k);
+        $result[BigInteger::MATH_BIGINTEGER_VALUE] = array_slice($result[BigInteger::MATH_BIGINTEGER_VALUE], $k);
 
         if ($this->_compare($result, false, $n, false) >= 0) {
-            $result = $this->_subtract($result[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE], false, $n, false);
+            $result = $this->_subtract($result[BigInteger::MATH_BIGINTEGER_VALUE], false, $n, false);
         }
 
-        return $result[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE];
+        return $result[BigInteger::MATH_BIGINTEGER_VALUE];
     }
 
     /**
@@ -2295,37 +2295,37 @@ class BigInteger {
     function _montgomeryMultiply($x, $y, $m)
     {
         $temp = $this->_multiply($x, false, $y, false);
-        return $this->_montgomery($temp[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE], $m);
+        return $this->_montgomery($temp[BigInteger::MATH_BIGINTEGER_VALUE], $m);
 
         static $cache = array(
-            \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VARIABLE => array(),
-            \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_DATA => array()
+            BigInteger::MATH_BIGINTEGER_VARIABLE => array(),
+            BigInteger::MATH_BIGINTEGER_DATA => array()
         );
 
-        if ( ($key = array_search($m, $cache[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VARIABLE])) === false ) {
-            $key = count($cache[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VARIABLE]);
-            $cache[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VARIABLE][] = $m;
-            $cache[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_DATA][] = $this->_modInverse67108864($m);
+        if ( ($key = array_search($m, $cache[BigInteger::MATH_BIGINTEGER_VARIABLE])) === false ) {
+            $key = count($cache[BigInteger::MATH_BIGINTEGER_VARIABLE]);
+            $cache[BigInteger::MATH_BIGINTEGER_VARIABLE][] = $m;
+            $cache[BigInteger::MATH_BIGINTEGER_DATA][] = $this->_modInverse67108864($m);
         }
 
         $n = max(count($x), count($y), count($m));
         $x = array_pad($x, $n, 0);
         $y = array_pad($y, $n, 0);
         $m = array_pad($m, $n, 0);
-        $a = array(\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE => $this->_array_repeat(0, $n + 1));
+        $a = array(BigInteger::MATH_BIGINTEGER_VALUE => $this->_array_repeat(0, $n + 1));
         for ($i = 0; $i < $n; ++$i) {
-            $temp = $a[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE][0] + $x[$i] * $y[0];
+            $temp = $a[BigInteger::MATH_BIGINTEGER_VALUE][0] + $x[$i] * $y[0];
             $temp = (int) ($temp - MATH_BIGINTEGER_BASE_FULL * ((int) ($temp / MATH_BIGINTEGER_BASE_FULL)));
-            $temp = $temp * $cache[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_DATA][$key];
+            $temp = $temp * $cache[BigInteger::MATH_BIGINTEGER_DATA][$key];
             $temp = (int) ($temp - MATH_BIGINTEGER_BASE_FULL * ((int) ($temp / MATH_BIGINTEGER_BASE_FULL)));
             $temp = $this->_add($this->_regularMultiply(array($x[$i]), $y), false, $this->_regularMultiply(array($temp), $m), false);
-            $a = $this->_add($a[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE], false, $temp[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE], false);
-            $a[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE] = array_slice($a[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE], 1);
+            $a = $this->_add($a[BigInteger::MATH_BIGINTEGER_VALUE], false, $temp[BigInteger::MATH_BIGINTEGER_VALUE], false);
+            $a[BigInteger::MATH_BIGINTEGER_VALUE] = array_slice($a[BigInteger::MATH_BIGINTEGER_VALUE], 1);
         }
-        if ($this->_compare($a[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE], false, $m, false) >= 0) {
-            $a = $this->_subtract($a[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE], false, $m, false);
+        if ($this->_compare($a[BigInteger::MATH_BIGINTEGER_VALUE], false, $m, false) >= 0) {
+            $a = $this->_subtract($a[BigInteger::MATH_BIGINTEGER_VALUE], false, $m, false);
         }
-        return $a[\PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_VALUE];
+        return $a[BigInteger::MATH_BIGINTEGER_VALUE];
     }
 
     /**
@@ -2418,7 +2418,7 @@ class BigInteger {
     function modInverse($n)
     {
         switch ( MATH_BIGINTEGER_MODE ) {
-            case \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MODE_GMP:
+            case BigInteger::MATH_BIGINTEGER_MODE_GMP:
                 $temp = new BigInteger();
                 $temp->value = gmp_invert($this->value, $n->value);
 
@@ -2484,7 +2484,7 @@ class BigInteger {
     function extendedGCD($n)
     {
         switch ( MATH_BIGINTEGER_MODE ) {
-            case \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MODE_GMP:
+            case BigInteger::MATH_BIGINTEGER_MODE_GMP:
                 extract(gmp_gcdext($this->value, $n->value));
 
                 return array(
@@ -2492,7 +2492,7 @@ class BigInteger {
                     'x'   => $this->_normalize(new BigInteger($s)),
                     'y'   => $this->_normalize(new BigInteger($t))
                 );
-            case \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MODE_BCMATH:
+            case BigInteger::MATH_BIGINTEGER_MODE_BCMATH:
                 // it might be faster to use the binary xGCD algorithim here, as well, but (1) that algorithim works
                 // best when the base is a power of 2 and (2) i don't think it'd make much difference, anyway.  as is,
                 // the basic extended euclidean algorithim is what we're using.
@@ -2629,10 +2629,10 @@ class BigInteger {
         $temp = new BigInteger();
 
         switch ( MATH_BIGINTEGER_MODE ) {
-            case \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MODE_GMP:
+            case BigInteger::MATH_BIGINTEGER_MODE_GMP:
                 $temp->value = gmp_abs($this->value);
                 break;
-            case \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MODE_BCMATH:
+            case BigInteger::MATH_BIGINTEGER_MODE_BCMATH:
                 $temp->value = (bccomp($this->value, '0', 0) < 0) ? substr($this->value, 1) : $this->value;
                 break;
             default:
@@ -2663,9 +2663,9 @@ class BigInteger {
     function compare($y)
     {
         switch ( MATH_BIGINTEGER_MODE ) {
-            case \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MODE_GMP:
+            case BigInteger::MATH_BIGINTEGER_MODE_GMP:
                 return gmp_cmp($this->value, $y->value);
-            case \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MODE_BCMATH:
+            case BigInteger::MATH_BIGINTEGER_MODE_BCMATH:
                 return bccomp($this->value, $y->value, 0);
         }
 
@@ -2721,7 +2721,7 @@ class BigInteger {
     function equals($x)
     {
         switch ( MATH_BIGINTEGER_MODE ) {
-            case \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MODE_GMP:
+            case BigInteger::MATH_BIGINTEGER_MODE_GMP:
                 return gmp_cmp($this->value, $x->value) == 0;
             default:
                 return $this->value === $x->value && $this->is_negative == $x->is_negative;
@@ -2740,7 +2740,7 @@ class BigInteger {
     function setPrecision($bits)
     {
         $this->precision = $bits;
-        if ( MATH_BIGINTEGER_MODE != \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MODE_BCMATH ) {
+        if ( MATH_BIGINTEGER_MODE != BigInteger::MATH_BIGINTEGER_MODE_BCMATH ) {
             $this->bitmask = new BigInteger(chr((1 << ($bits & 0x7)) - 1) . str_repeat(chr(0xFF), $bits >> 3), 256);
         } else {
             $this->bitmask = new BigInteger(bcpow('2', $bits, 0));
@@ -2761,12 +2761,12 @@ class BigInteger {
     function bitwise_and($x)
     {
         switch ( MATH_BIGINTEGER_MODE ) {
-            case \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MODE_GMP:
+            case BigInteger::MATH_BIGINTEGER_MODE_GMP:
                 $temp = new BigInteger();
                 $temp->value = gmp_and($this->value, $x->value);
 
                 return $this->_normalize($temp);
-            case \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MODE_BCMATH:
+            case BigInteger::MATH_BIGINTEGER_MODE_BCMATH:
                 $left = $this->toBytes();
                 $right = $x->toBytes();
 
@@ -2802,12 +2802,12 @@ class BigInteger {
     function bitwise_or($x)
     {
         switch ( MATH_BIGINTEGER_MODE ) {
-            case \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MODE_GMP:
+            case BigInteger::MATH_BIGINTEGER_MODE_GMP:
                 $temp = new BigInteger();
                 $temp->value = gmp_or($this->value, $x->value);
 
                 return $this->_normalize($temp);
-            case \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MODE_BCMATH:
+            case BigInteger::MATH_BIGINTEGER_MODE_BCMATH:
                 $left = $this->toBytes();
                 $right = $x->toBytes();
 
@@ -2842,12 +2842,12 @@ class BigInteger {
     function bitwise_xor($x)
     {
         switch ( MATH_BIGINTEGER_MODE ) {
-            case \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MODE_GMP:
+            case BigInteger::MATH_BIGINTEGER_MODE_GMP:
                 $temp = new BigInteger();
                 $temp->value = gmp_xor($this->value, $x->value);
 
                 return $this->_normalize($temp);
-            case \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MODE_BCMATH:
+            case BigInteger::MATH_BIGINTEGER_MODE_BCMATH:
                 $left = $this->toBytes();
                 $right = $x->toBytes();
 
@@ -2922,7 +2922,7 @@ class BigInteger {
         $temp = new BigInteger();
 
         switch ( MATH_BIGINTEGER_MODE ) {
-            case \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MODE_GMP:
+            case BigInteger::MATH_BIGINTEGER_MODE_GMP:
                 static $two;
 
                 if (!isset($two)) {
@@ -2932,7 +2932,7 @@ class BigInteger {
                 $temp->value = gmp_div_q($this->value, gmp_pow($two, $shift));
 
                 break;
-            case \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MODE_BCMATH:
+            case BigInteger::MATH_BIGINTEGER_MODE_BCMATH:
                 $temp->value = bcdiv($this->value, bcpow('2', $shift, 0), 0);
 
                 break;
@@ -2960,7 +2960,7 @@ class BigInteger {
         $temp = new BigInteger();
 
         switch ( MATH_BIGINTEGER_MODE ) {
-            case \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MODE_GMP:
+            case BigInteger::MATH_BIGINTEGER_MODE_GMP:
                 static $two;
 
                 if (!isset($two)) {
@@ -2970,7 +2970,7 @@ class BigInteger {
                 $temp->value = gmp_mul($this->value, gmp_pow($two, $shift));
 
                 break;
-            case \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MODE_BCMATH:
+            case BigInteger::MATH_BIGINTEGER_MODE_BCMATH:
                 $temp->value = bcmul($this->value, bcpow('2', $shift, 0), 0);
 
                 break;
@@ -2998,7 +2998,7 @@ class BigInteger {
 
         if ($this->precision > 0) {
             $precision = $this->precision;
-            if ( MATH_BIGINTEGER_MODE == \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MODE_BCMATH ) {
+            if ( MATH_BIGINTEGER_MODE == BigInteger::MATH_BIGINTEGER_MODE_BCMATH ) {
                 $mask = $this->bitmask->subtract(new BigInteger(1));
                 $mask = $mask->toBytes();
             } else {
@@ -3023,7 +3023,7 @@ class BigInteger {
         $left = $this->bitwise_leftShift($shift);
         $left = $left->bitwise_and(new BigInteger($mask, 256));
         $right = $this->bitwise_rightShift($precision - $shift);
-        $result = MATH_BIGINTEGER_MODE != \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MODE_BCMATH ? $left->bitwise_or($right) : $left->add($right);
+        $result = MATH_BIGINTEGER_MODE != BigInteger::MATH_BIGINTEGER_MODE_BCMATH ? $left->bitwise_or($right) : $left->add($right);
         return $this->_normalize($result);
     }
 
@@ -3201,7 +3201,7 @@ class BigInteger {
         $x = $this->random($min, $max);
 
         // gmp_nextprime() requires PHP 5 >= 5.2.0 per <http://php.net/gmp-nextprime>.
-        if ( MATH_BIGINTEGER_MODE == \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MODE_GMP && function_exists('gmp_nextprime') ) {
+        if ( MATH_BIGINTEGER_MODE == BigInteger::MATH_BIGINTEGER_MODE_GMP && function_exists('gmp_nextprime') ) {
             $p = new BigInteger();
             $p->value = gmp_nextprime($x->value);
 
@@ -3268,10 +3268,10 @@ class BigInteger {
     function _make_odd()
     {
         switch ( MATH_BIGINTEGER_MODE ) {
-            case \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MODE_GMP:
+            case BigInteger::MATH_BIGINTEGER_MODE_GMP:
                 gmp_setbit($this->value, 0);
                 break;
-            case \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MODE_BCMATH:
+            case BigInteger::MATH_BIGINTEGER_MODE_BCMATH:
                 if ($this->value[strlen($this->value) - 1] % 2 == 0) {
                     $this->value = bcadd($this->value, '1');
                 }
@@ -3318,9 +3318,9 @@ class BigInteger {
         // ie. gmp_testbit($this, 0)
         // ie. isEven() or !isOdd()
         switch ( MATH_BIGINTEGER_MODE ) {
-            case \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MODE_GMP:
+            case BigInteger::MATH_BIGINTEGER_MODE_GMP:
                 return gmp_prob_prime($this->value, $t) != 0;
-            case \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MODE_BCMATH:
+            case BigInteger::MATH_BIGINTEGER_MODE_BCMATH:
                 if ($this->value === '2') {
                     return true;
                 }
@@ -3354,7 +3354,7 @@ class BigInteger {
                 953,  967,  971,  977,  983,  991,  997
             );
 
-            if ( MATH_BIGINTEGER_MODE != \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MODE_INTERNAL ) {
+            if ( MATH_BIGINTEGER_MODE != BigInteger::MATH_BIGINTEGER_MODE_INTERNAL ) {
                 for ($i = 0; $i < count($primes); ++$i) {
                     $primes[$i] = new BigInteger($primes[$i]);
                 }
@@ -3370,7 +3370,7 @@ class BigInteger {
         }
 
         // see HAC 4.4.1 "Random search for probable primes"
-        if ( MATH_BIGINTEGER_MODE != \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MODE_INTERNAL ) {
+        if ( MATH_BIGINTEGER_MODE != BigInteger::MATH_BIGINTEGER_MODE_INTERNAL ) {
             foreach ($primes as $prime) {
                 list(, $r) = $this->divide($prime);
                 if ($r->equals($zero)) {
@@ -3394,7 +3394,7 @@ class BigInteger {
         $r = $n_1->copy();
         $r_value = $r->value;
         // ie. $s = gmp_scan1($n, 0) and $r = gmp_div_q($n, gmp_pow(gmp_init('2'), $s));
-        if ( MATH_BIGINTEGER_MODE == \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MODE_BCMATH ) {
+        if ( MATH_BIGINTEGER_MODE == BigInteger::MATH_BIGINTEGER_MODE_BCMATH ) {
             $s = 0;
             // if $n was 1, $r would be 0 and this would be an infinite loop, hence our $this->equals($one) check earlier
             while ($r->value[strlen($r->value) - 1] % 2 == 0) {
@@ -3518,13 +3518,13 @@ class BigInteger {
         $result->bitmask = $this->bitmask;
 
         switch ( MATH_BIGINTEGER_MODE ) {
-            case \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MODE_GMP:
+            case BigInteger::MATH_BIGINTEGER_MODE_GMP:
                 if (!empty($result->bitmask->value)) {
                     $result->value = gmp_and($result->value, $result->bitmask->value);
                 }
 
                 return $result;
-            case \PhpSecLib\Math\BigInteger::MATH_BIGINTEGER_MODE_BCMATH:
+            case BigInteger::MATH_BIGINTEGER_MODE_BCMATH:
                 if (!empty($result->bitmask->value)) {
                     $result->value = bcmod($result->value, $result->bitmask->value);
                 }
