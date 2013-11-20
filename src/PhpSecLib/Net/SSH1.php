@@ -606,7 +606,7 @@ class SSH1 {
                 $this->crypto->setKey(substr($session_key, 0,  8));
                 break;
             case NET_SSH1_CIPHER_3DES:
-                $this->crypto = new Crypt_TripleDES(CRYPT_DES_MODE_3CBC);
+                $this->crypto = new Crypt_TripleDES(\PhpSecLib\Crypt\TripleDES::CRYPT_DES_MODE_3CBC);
                 $this->crypto->disablePadding();
                 $this->crypto->enableContinuousBuffer();
                 $this->crypto->setKey(substr($session_key, 0, 24));
@@ -1242,8 +1242,8 @@ class SSH1 {
     {
         /*
         $rsa = new RSA();
-        $rsa->loadKey($key, CRYPT_RSA_PUBLIC_FORMAT_RAW);
-        $rsa->setEncryptionMode(CRYPT_RSA_ENCRYPTION_PKCS1);
+        $rsa->loadKey($key, \PhpSecLib\Crypt\RSA::CRYPT_RSA_PUBLIC_FORMAT_RAW);
+        $rsa->setEncryptionMode(\PhpSecLib\Crypt\RSA::CRYPT_RSA_ENCRYPTION_PKCS1);
         return $rsa->encrypt($m);
         */
 

@@ -1348,7 +1348,7 @@ class SSH2 {
                 // $this->encrypt_block_size = 64 / 8 == the default
                 break;
             case '3des-ctr':
-                $this->encrypt = new Crypt_TripleDES(CRYPT_DES_MODE_CTR);
+                $this->encrypt = new Crypt_TripleDES(\PhpSecLib\Crypt\DES::CRYPT_DES_MODE_CTR);
                 // $this->encrypt_block_size = 64 / 8 == the default
                 break;
             case 'aes256-cbc':
@@ -1360,7 +1360,7 @@ class SSH2 {
             case 'aes256-ctr':
             case 'aes192-ctr':
             case 'aes128-ctr':
-                $this->encrypt = new Crypt_Rijndael(CRYPT_RIJNDAEL_MODE_CTR);
+                $this->encrypt = new Crypt_Rijndael(\PhpSecLib\Crypt\Rijndael::CRYPT_RIJNDAEL_MODE_CTR);
                 $this->encrypt_block_size = 16; // eg. 128 / 8
                 break;
             case 'blowfish-cbc':
@@ -1368,7 +1368,7 @@ class SSH2 {
                 $this->encrypt_block_size = 8;
                 break;
             case 'blowfish-ctr':
-                $this->encrypt = new Crypt_Blowfish(CRYPT_BLOWFISH_MODE_CTR);
+                $this->encrypt = new Crypt_Blowfish(\PhpSecLib\Crypt\Blowfish::CRYPT_BLOWFISH_MODE_CTR);
                 $this->encrypt_block_size = 8;
                 break;
             case 'twofish128-cbc':
@@ -1381,7 +1381,7 @@ class SSH2 {
             case 'twofish128-ctr':
             case 'twofish192-ctr':
             case 'twofish256-ctr':
-                $this->encrypt = new Crypt_Twofish(CRYPT_TWOFISH_MODE_CTR);
+                $this->encrypt = new Crypt_Twofish(\PhpSecLib\Crypt\Twofish::CRYPT_TWOFISH_MODE_CTR);
                 $this->encrypt_block_size = 16;
                 break;
             case 'arcfour':
@@ -1398,7 +1398,7 @@ class SSH2 {
                 $this->decrypt = new Crypt_TripleDES();
                 break;
             case '3des-ctr':
-                $this->decrypt = new Crypt_TripleDES(CRYPT_DES_MODE_CTR);
+                $this->decrypt = new Crypt_TripleDES(\PhpSecLib\Crypt\DES::CRYPT_DES_MODE_CTR);
                 break;
             case 'aes256-cbc':
             case 'aes192-cbc':
@@ -1409,7 +1409,7 @@ class SSH2 {
             case 'aes256-ctr':
             case 'aes192-ctr':
             case 'aes128-ctr':
-                $this->decrypt = new Crypt_Rijndael(CRYPT_RIJNDAEL_MODE_CTR);
+                $this->decrypt = new Crypt_Rijndael(\PhpSecLib\Crypt\Rijndael::CRYPT_RIJNDAEL_MODE_CTR);
                 $this->decrypt_block_size = 16;
                 break;
             case 'blowfish-cbc':
@@ -1417,7 +1417,7 @@ class SSH2 {
                 $this->decrypt_block_size = 8;
                 break;
             case 'blowfish-ctr':
-                $this->decrypt = new Crypt_Blowfish(CRYPT_BLOWFISH_MODE_CTR);
+                $this->decrypt = new Crypt_Blowfish(\PhpSecLib\Crypt\Blowfish::CRYPT_BLOWFISH_MODE_CTR);
                 $this->decrypt_block_size = 8;
                 break;
             case 'twofish128-cbc':
@@ -1430,7 +1430,7 @@ class SSH2 {
             case 'twofish128-ctr':
             case 'twofish192-ctr':
             case 'twofish256-ctr':
-                $this->decrypt = new Crypt_Twofish(CRYPT_TWOFISH_MODE_CTR);
+                $this->decrypt = new Crypt_Twofish(\PhpSecLib\Crypt\Twofish::CRYPT_TWOFISH_MODE_CTR);
                 $this->decrypt_block_size = 16;
                 break;
             case 'arcfour':
@@ -1899,7 +1899,7 @@ class SSH2 {
     function _privatekey_login($username, $privatekey)
     {
         // see http://tools.ietf.org/html/rfc4253#page-15
-        $publickey = $privatekey->getPublicKey(CRYPT_RSA_PUBLIC_FORMAT_RAW);
+        $publickey = $privatekey->getPublicKey(\PhpSecLib\Crypt\RSA::CRYPT_RSA_PUBLIC_FORMAT_RAW);
         if ($publickey === false) {
             return false;
         }
@@ -1949,7 +1949,7 @@ class SSH2 {
         }
 
         $packet = $part1 . chr(1) . $part2;
-        $privatekey->setSignatureMode(CRYPT_RSA_SIGNATURE_PKCS1);
+        $privatekey->setSignatureMode(\PhpSecLib\Crypt\RSA::CRYPT_RSA_SIGNATURE_PKCS1);
         $signature = $privatekey->sign(pack('Na*a*', strlen($this->session_id), $this->session_id, $packet));
         $signature = pack('Na*Na*', strlen('ssh-rsa'), 'ssh-rsa', strlen($signature), $signature);
         $packet.= pack('Na*', strlen($signature), $signature);
@@ -3443,8 +3443,8 @@ class SSH2 {
                 $signature = $this->_string_shift($signature, $temp['length']);
 
                 $rsa = new RSA();
-                $rsa->setSignatureMode(CRYPT_RSA_SIGNATURE_PKCS1);
-                $rsa->loadKey(array('e' => $e, 'n' => $n), CRYPT_RSA_PUBLIC_FORMAT_RAW);
+                $rsa->setSignatureMode(\PhpSecLib\Crypt\RSA::CRYPT_RSA_SIGNATURE_PKCS1);
+                $rsa->loadKey(array('e' => $e, 'n' => $n), \PhpSecLib\Crypt\RSA::CRYPT_RSA_PUBLIC_FORMAT_RAW);
                 if (!$rsa->verify($this->exchange_hash, $signature)) {
                     user_error('Bad server signature');
                     return $this->_disconnect(NET_SSH2_DISCONNECT_HOST_KEY_NOT_VERIFIABLE);

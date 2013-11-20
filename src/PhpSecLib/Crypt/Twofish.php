@@ -57,59 +57,6 @@ namespace PhpSecLib\Crypt;
  * @link       http://phpseclib.sourceforge.net
  */
 
-/**#@+
- * @access public
- * @see Crypt_Twofish::encrypt()
- * @see Crypt_Twofish::decrypt()
- */
-/**
- * Encrypt / decrypt using the Counter mode.
- *
- * Set to -1 since that's what Crypt/Random.php uses to index the CTR mode.
- *
- * @link http://en.wikipedia.org/wiki/Block_cipher_modes_of_operation#Counter_.28CTR.29
- */
-define('CRYPT_TWOFISH_MODE_CTR', CRYPT_MODE_CTR);
-/**
- * Encrypt / decrypt using the Electronic Code Book mode.
- *
- * @link http://en.wikipedia.org/wiki/Block_cipher_modes_of_operation#Electronic_codebook_.28ECB.29
- */
-define('CRYPT_TWOFISH_MODE_ECB', CRYPT_MODE_ECB);
-/**
- * Encrypt / decrypt using the Code Book Chaining mode.
- *
- * @link http://en.wikipedia.org/wiki/Block_cipher_modes_of_operation#Cipher-block_chaining_.28CBC.29
- */
-define('CRYPT_TWOFISH_MODE_CBC', CRYPT_MODE_CBC);
-/**
- * Encrypt / decrypt using the Cipher Feedback mode.
- *
- * @link http://en.wikipedia.org/wiki/Block_cipher_modes_of_operation#Cipher_feedback_.28CFB.29
- */
-define('CRYPT_TWOFISH_MODE_CFB', CRYPT_MODE_CFB);
-/**
- * Encrypt / decrypt using the Cipher Feedback mode.
- *
- * @link http://en.wikipedia.org/wiki/Block_cipher_modes_of_operation#Output_feedback_.28OFB.29
- */
-define('CRYPT_TWOFISH_MODE_OFB', CRYPT_MODE_OFB);
-/**#@-*/
-
-/**#@+
- * @access private
- * @see Crypt_Twofish::Crypt_Twofish()
- */
-/**
- * Toggles the internal implementation
- */
-define('CRYPT_TWOFISH_MODE_INTERNAL', CRYPT_MODE_INTERNAL);
-/**
- * Toggles the mcrypt implementation
- */
-define('CRYPT_TWOFISH_MODE_MCRYPT', CRYPT_MODE_MCRYPT);
-/**#@-*/
-
 /**
  * Pure-PHP implementation of Twofish.
  *
@@ -120,6 +67,59 @@ define('CRYPT_TWOFISH_MODE_MCRYPT', CRYPT_MODE_MCRYPT);
  * @package Twofish
  */
 class Twofish extends Base {
+    /**#@+
+     * @access public
+     * @see Crypt_Twofish::encrypt()
+     * @see Crypt_Twofish::decrypt()
+     */
+    /**
+     * Encrypt / decrypt using the Counter mode.
+     *
+     * Set to -1 since that's what Crypt/Random.php uses to index the CTR mode.
+     *
+     * @link http://en.wikipedia.org/wiki/Block_cipher_modes_of_operation#Counter_.28CTR.29
+     */
+    const CRYPT_TWOFISH_MODE_CTR = \PhpSecLib\Crypt\Base::CRYPT_MODE_CTR;
+    /**
+     * Encrypt / decrypt using the Electronic Code Book mode.
+     *
+     * @link http://en.wikipedia.org/wiki/Block_cipher_modes_of_operation#Electronic_codebook_.28ECB.29
+     */
+    const CRYPT_TWOFISH_MODE_ECB = \PhpSecLib\Crypt\Base::CRYPT_MODE_ECB;
+    /**
+     * Encrypt / decrypt using the Code Book Chaining mode.
+     *
+     * @link http://en.wikipedia.org/wiki/Block_cipher_modes_of_operation#Cipher-block_chaining_.28CBC.29
+     */
+    const CRYPT_TWOFISH_MODE_CBC = \PhpSecLib\Crypt\Base::CRYPT_MODE_CBC;
+    /**
+     * Encrypt / decrypt using the Cipher Feedback mode.
+     *
+     * @link http://en.wikipedia.org/wiki/Block_cipher_modes_of_operation#Cipher_feedback_.28CFB.29
+     */
+    const CRYPT_TWOFISH_MODE_CFB = \PhpSecLib\Crypt\Base::CRYPT_MODE_CFB;
+    /**
+     * Encrypt / decrypt using the Cipher Feedback mode.
+     *
+     * @link http://en.wikipedia.org/wiki/Block_cipher_modes_of_operation#Output_feedback_.28OFB.29
+     */
+    const CRYPT_TWOFISH_MODE_OFB = \PhpSecLib\Crypt\Base::CRYPT_MODE_OFB;
+    /**#@-*/
+
+    /**#@+
+     * @access private
+     * @see Crypt_Twofish::Crypt_Twofish()
+     */
+    /**
+     * Toggles the internal implementation
+     */
+    const CRYPT_TWOFISH_MODE_INTERNAL = \PhpSecLib\Crypt\Base::CRYPT_MODE_INTERNAL;
+    /**
+     * Toggles the mcrypt implementation
+     */
+    const CRYPT_TWOFISH_MODE_MCRYPT = \PhpSecLib\Crypt\Base::CRYPT_MODE_MCRYPT;
+    /**#@-*/
+
     /**
      * The namespace used by the cipher for its constants.
      *
@@ -448,23 +448,23 @@ class Twofish extends Base {
      *
      * $mode could be:
      *
-     * - CRYPT_TWOFISH_MODE_ECB
+     * - \PhpSecLib\Crypt\Twofish::CRYPT_TWOFISH_MODE_ECB
      *
-     * - CRYPT_TWOFISH_MODE_CBC
+     * - \PhpSecLib\Crypt\Twofish::CRYPT_TWOFISH_MODE_CBC
      *
-     * - CRYPT_TWOFISH_MODE_CTR
+     * - \PhpSecLib\Crypt\Twofish::CRYPT_TWOFISH_MODE_CTR
      *
-     * - CRYPT_TWOFISH_MODE_CFB
+     * - \PhpSecLib\Crypt\Twofish::CRYPT_TWOFISH_MODE_CFB
      *
-     * - CRYPT_TWOFISH_MODE_OFB
+     * - \PhpSecLib\Crypt\Twofish::CRYPT_TWOFISH_MODE_OFB
      *
-     * If not explictly set, CRYPT_TWOFISH_MODE_CBC will be used.
+     * If not explictly set, \PhpSecLib\Crypt\Twofish::CRYPT_TWOFISH_MODE_CBC will be used.
      *
      * @see Crypt_Base::Crypt_Base()
      * @param optional Integer $mode
      * @access public
      */
-    function Crypt_Twofish($mode = CRYPT_TWOFISH_MODE_CBC)
+    function Crypt_Twofish($mode = \PhpSecLib\Crypt\Twofish::CRYPT_TWOFISH_MODE_CBC)
     {
         parent::Crypt_Base($mode);
     }

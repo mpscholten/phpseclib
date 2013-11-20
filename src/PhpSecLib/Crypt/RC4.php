@@ -63,28 +63,6 @@ namespace PhpSecLib\Crypt;
  * @link       http://phpseclib.sourceforge.net
  */
 
-/**#@+
- * @access private
- * @see Crypt_RC4::Crypt_RC4()
- */
-/**
- * Toggles the internal implementation
- */
-define('CRYPT_RC4_MODE_INTERNAL', CRYPT_MODE_INTERNAL);
-/**
- * Toggles the mcrypt implementation
- */
-define('CRYPT_RC4_MODE_MCRYPT', CRYPT_MODE_MCRYPT);
-/**#@-*/
-
-/**#@+
- * @access private
- * @see Crypt_RC4::_crypt()
- */
-define('CRYPT_RC4_ENCRYPT', 0);
-define('CRYPT_RC4_DECRYPT', 1);
-/**#@-*/
-
 /**
  * Pure-PHP implementation of RC4.
  *
@@ -94,6 +72,28 @@ define('CRYPT_RC4_DECRYPT', 1);
  * @package RC4
  */
 class RC4 extends Base {
+    /**#@+
+     * @access private
+     * @see Crypt_RC4::Crypt_RC4()
+     */
+    /**
+     * Toggles the internal implementation
+     */
+    const CRYPT_RC4_MODE_INTERNAL = \PhpSecLib\Crypt\Base::CRYPT_MODE_INTERNAL;
+    /**
+     * Toggles the mcrypt implementation
+     */
+    const CRYPT_RC4_MODE_MCRYPT = \PhpSecLib\Crypt\Base::CRYPT_MODE_MCRYPT;
+    /**#@-*/
+
+    /**#@+
+     * @access private
+     * @see Crypt_RC4::_crypt()
+     */
+    const CRYPT_RC4_ENCRYPT = 0;
+    const CRYPT_RC4_DECRYPT = 1;
+    /**#@-*/
+
     /**
      * Block Length of the cipher
      *
@@ -173,7 +173,7 @@ class RC4 extends Base {
      */
     function Crypt_RC4()
     {
-        parent::Crypt_Base(CRYPT_MODE_STREAM);
+        parent::Crypt_Base(\PhpSecLib\Crypt\Base::CRYPT_MODE_STREAM);
     }
 
     /**
@@ -225,10 +225,10 @@ class RC4 extends Base {
      */
     function encrypt($plaintext)
     {
-        if ($this->engine == CRYPT_MODE_MCRYPT) {
+        if ($this->engine == \PhpSecLib\Crypt\Base::CRYPT_MODE_MCRYPT) {
             return parent::encrypt($plaintext);
         }
-        return $this->_crypt($plaintext, CRYPT_RC4_ENCRYPT);
+        return $this->_crypt($plaintext, \PhpSecLib\Crypt\RC4::CRYPT_RC4_ENCRYPT);
     }
 
     /**
@@ -245,10 +245,10 @@ class RC4 extends Base {
      */
     function decrypt($ciphertext)
     {
-        if ($this->engine == CRYPT_MODE_MCRYPT) {
+        if ($this->engine == \PhpSecLib\Crypt\Base::CRYPT_MODE_MCRYPT) {
             return parent::decrypt($ciphertext);
         }
-        return $this->_crypt($ciphertext, CRYPT_RC4_DECRYPT);
+        return $this->_crypt($ciphertext, \PhpSecLib\Crypt\RC4::CRYPT_RC4_DECRYPT);
     }
 
 
@@ -275,7 +275,7 @@ class RC4 extends Base {
         }
 
         $this->stream = array();
-        $this->stream[CRYPT_RC4_DECRYPT] = $this->stream[CRYPT_RC4_ENCRYPT] = array(
+        $this->stream[\PhpSecLib\Crypt\RC4::CRYPT_RC4_DECRYPT] = $this->stream[\PhpSecLib\Crypt\RC4::CRYPT_RC4_ENCRYPT] = array(
             0, // index $i
             0, // index $j
             $keyStream

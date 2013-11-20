@@ -195,13 +195,13 @@ function crypt_random_string($length)
         // http://en.wikipedia.org/wiki/Cryptographically_secure_pseudorandom_number_generator#Designs_based_on_cryptographic_primitives
         switch (true) {
             case class_exists('AES'):
-                $crypto = new AES(CRYPT_AES_MODE_CTR);
+                $crypto = new AES(\PhpSecLib\Crypt\AES::CRYPT_AES_MODE_CTR);
                 break;
             case class_exists('TripleDES'):
-                $crypto = new TripleDES(CRYPT_DES_MODE_CTR);
+                $crypto = new TripleDES(\PhpSecLib\Crypt\DES::CRYPT_DES_MODE_CTR);
                 break;
             case class_exists('DES'):
-                $crypto = new DES(CRYPT_DES_MODE_CTR);
+                $crypto = new DES(\PhpSecLib\Crypt\DES::CRYPT_DES_MODE_CTR);
                 break;
             case class_exists('RC4'):
                 $crypto = new RC4();

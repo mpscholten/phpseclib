@@ -54,59 +54,6 @@ namespace PhpSecLib\Crypt;
  * @link       http://phpseclib.sourceforge.net
  */
 
-/**#@+
- * @access public
- * @see Crypt_RC2::encrypt()
- * @see Crypt_RC2::decrypt()
- */
-/**
- * Encrypt / decrypt using the Counter mode.
- *
- * Set to -1 since that's what Crypt/Random.php uses to index the CTR mode.
- *
- * @link http://en.wikipedia.org/wiki/Block_cipher_modes_of_operation#Counter_.28CTR.29
- */
-define('CRYPT_RC2_MODE_CTR', CRYPT_MODE_CTR);
-/**
- * Encrypt / decrypt using the Electronic Code Book mode.
- *
- * @link http://en.wikipedia.org/wiki/Block_cipher_modes_of_operation#Electronic_codebook_.28ECB.29
- */
-define('CRYPT_RC2_MODE_ECB', CRYPT_MODE_ECB);
-/**
- * Encrypt / decrypt using the Code Book Chaining mode.
- *
- * @link http://en.wikipedia.org/wiki/Block_cipher_modes_of_operation#Cipher-block_chaining_.28CBC.29
- */
-define('CRYPT_RC2_MODE_CBC', CRYPT_MODE_CBC);
-/**
- * Encrypt / decrypt using the Cipher Feedback mode.
- *
- * @link http://en.wikipedia.org/wiki/Block_cipher_modes_of_operation#Cipher_feedback_.28CFB.29
- */
-define('CRYPT_RC2_MODE_CFB', CRYPT_MODE_CFB);
-/**
- * Encrypt / decrypt using the Cipher Feedback mode.
- *
- * @link http://en.wikipedia.org/wiki/Block_cipher_modes_of_operation#Output_feedback_.28OFB.29
- */
-define('CRYPT_RC2_MODE_OFB', CRYPT_MODE_OFB);
-/**#@-*/
-
-/**#@+
- * @access private
- * @see Crypt_RC2::Crypt_RC2()
- */
-/**
- * Toggles the internal implementation
- */
-define('CRYPT_RC2_MODE_INTERNAL', CRYPT_MODE_INTERNAL);
-/**
- * Toggles the mcrypt implementation
- */
-define('CRYPT_RC2_MODE_MCRYPT', CRYPT_MODE_MCRYPT);
-/**#@-*/
-
 /**
  * Pure-PHP implementation of RC2.
  *
@@ -115,6 +62,59 @@ define('CRYPT_RC2_MODE_MCRYPT', CRYPT_MODE_MCRYPT);
  * @package Crypt_RC2
  */
 class Crypt_RC2 extends Base {
+    /**#@+
+     * @access public
+     * @see Crypt_RC2::encrypt()
+     * @see Crypt_RC2::decrypt()
+     */
+    /**
+     * Encrypt / decrypt using the Counter mode.
+     *
+     * Set to -1 since that's what Crypt/Random.php uses to index the CTR mode.
+     *
+     * @link http://en.wikipedia.org/wiki/Block_cipher_modes_of_operation#Counter_.28CTR.29
+     */
+    const CRYPT_RC2_MODE_CTR = \PhpSecLib\Crypt\Base::CRYPT_MODE_CTR;
+    /**
+     * Encrypt / decrypt using the Electronic Code Book mode.
+     *
+     * @link http://en.wikipedia.org/wiki/Block_cipher_modes_of_operation#Electronic_codebook_.28ECB.29
+     */
+    const CRYPT_RC2_MODE_ECB = \PhpSecLib\Crypt\Base::CRYPT_MODE_ECB;
+    /**
+     * Encrypt / decrypt using the Code Book Chaining mode.
+     *
+     * @link http://en.wikipedia.org/wiki/Block_cipher_modes_of_operation#Cipher-block_chaining_.28CBC.29
+     */
+    const CRYPT_RC2_MODE_CBC = \PhpSecLib\Crypt\Base::CRYPT_MODE_CBC;
+    /**
+     * Encrypt / decrypt using the Cipher Feedback mode.
+     *
+     * @link http://en.wikipedia.org/wiki/Block_cipher_modes_of_operation#Cipher_feedback_.28CFB.29
+     */
+    const CRYPT_RC2_MODE_CFB = \PhpSecLib\Crypt\Base::CRYPT_MODE_CFB;
+    /**
+     * Encrypt / decrypt using the Cipher Feedback mode.
+     *
+     * @link http://en.wikipedia.org/wiki/Block_cipher_modes_of_operation#Output_feedback_.28OFB.29
+     */
+    const CRYPT_RC2_MODE_OFB = \PhpSecLib\Crypt\Base::CRYPT_MODE_OFB;
+    /**#@-*/
+
+    /**#@+
+     * @access private
+     * @see Crypt_RC2::Crypt_RC2()
+     */
+    /**
+     * Toggles the internal implementation
+     */
+    const CRYPT_RC2_MODE_INTERNAL = \PhpSecLib\Crypt\Base::CRYPT_MODE_INTERNAL;
+    /**
+     * Toggles the mcrypt implementation
+     */
+    const CRYPT_RC2_MODE_MCRYPT = \PhpSecLib\Crypt\Base::CRYPT_MODE_MCRYPT;
+    /**#@-*/
+
     /**
      * Block Length of the cipher
      *
@@ -316,23 +316,23 @@ class Crypt_RC2 extends Base {
      *
      * $mode could be:
      *
-     * - CRYPT_RC2_MODE_ECB
+     * - \PhpSecLib\Crypt\Crypt_RC2::CRYPT_RC2_MODE_ECB
      *
-     * - CRYPT_RC2_MODE_CBC
+     * - \PhpSecLib\Crypt\Crypt_RC2::CRYPT_RC2_MODE_CBC
      *
-     * - CRYPT_RC2_MODE_CTR
+     * - \PhpSecLib\Crypt\Crypt_RC2::CRYPT_RC2_MODE_CTR
      *
-     * - CRYPT_RC2_MODE_CFB
+     * - \PhpSecLib\Crypt\Crypt_RC2::CRYPT_RC2_MODE_CFB
      *
-     * - CRYPT_RC2_MODE_OFB
+     * - \PhpSecLib\Crypt\Crypt_RC2::CRYPT_RC2_MODE_OFB
      *
-     * If not explictly set, CRYPT_RC2_MODE_CBC will be used.
+     * If not explictly set, \PhpSecLib\Crypt\Crypt_RC2::CRYPT_RC2_MODE_CBC will be used.
      *
      * @see Crypt_Base::Crypt_Base()
      * @param optional Integer $mode
      * @access public
      */
-    function Crypt_RC2($mode = CRYPT_RC2_MODE_CBC)
+    function Crypt_RC2($mode = \PhpSecLib\Crypt\Crypt_RC2::CRYPT_RC2_MODE_CBC)
     {
         parent::Crypt_Base($mode);
         $this->setKey('');

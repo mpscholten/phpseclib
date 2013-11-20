@@ -2124,7 +2124,7 @@ class X509 {
                     case 'sha384WithRSAEncryption':
                     case 'sha512WithRSAEncryption':
                         $rsa->setHash(preg_replace('#WithRSAEncryption$#', '', $signatureAlgorithm));
-                        $rsa->setSignatureMode(CRYPT_RSA_SIGNATURE_PKCS1);
+                        $rsa->setSignatureMode(\PhpSecLib\Crypt\RSA::CRYPT_RSA_SIGNATURE_PKCS1);
                         if (!@$rsa->verify($signatureSubject, $signature)) {
                             return false;
                         }
@@ -3476,7 +3476,7 @@ class X509 {
                     case 'sha384WithRSAEncryption':
                     case 'sha512WithRSAEncryption':
                         $key->setHash(preg_replace('#WithRSAEncryption$#', '', $signatureAlgorithm));
-                        $key->setSignatureMode(CRYPT_RSA_SIGNATURE_PKCS1);
+                        $key->setSignatureMode(\PhpSecLib\Crypt\RSA::CRYPT_RSA_SIGNATURE_PKCS1);
 
                         $this->currentCert['signature'] = base64_encode("\0" . $key->sign($this->signatureSubject));
                         return $this->currentCert;
@@ -4060,7 +4060,7 @@ class X509 {
                 }
                 return false;
             default: // Should be a key object (i.e.: RSA).
-                $key = $key->getPublicKey(CRYPT_RSA_PUBLIC_FORMAT_PKCS1_RAW);
+                $key = $key->getPublicKey(\PhpSecLib\Crypt\RSA::\PhpSecLib\Crypt\RSA::CRYPT_RSA_PUBLIC_FORMAT_PKCS1_RAW);
                 break;
         }
 
@@ -4098,7 +4098,7 @@ class X509 {
                 //return new File_ASN1_Element(base64_decode(preg_replace('#-.+-|[\r\n]#', '', $this->publicKey->getPublicKey())));
                 return array(
                     'algorithm' => array('algorithm' => 'rsaEncryption'),
-                    'subjectPublicKey' => $this->publicKey->getPublicKey(CRYPT_RSA_PUBLIC_FORMAT_PKCS1_RAW)
+                    'subjectPublicKey' => $this->publicKey->getPublicKey(\PhpSecLib\Crypt\RSA::\PhpSecLib\Crypt\RSA::CRYPT_RSA_PUBLIC_FORMAT_PKCS1_RAW)
                 );
             default:
                 return false;

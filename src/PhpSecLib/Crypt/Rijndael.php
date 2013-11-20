@@ -73,59 +73,6 @@ namespace PhpSecLib\Crypt;
  * @link       http://phpseclib.sourceforge.net
  */
 
-/**#@+
- * @access public
- * @see Crypt_Rijndael::encrypt()
- * @see Crypt_Rijndael::decrypt()
- */
-/**
- * Encrypt / decrypt using the Counter mode.
- *
- * Set to -1 since that's what Crypt/Random.php uses to index the CTR mode.
- *
- * @link http://en.wikipedia.org/wiki/Block_cipher_modes_of_operation#Counter_.28CTR.29
- */
-define('CRYPT_RIJNDAEL_MODE_CTR', CRYPT_MODE_CTR);
-/**
- * Encrypt / decrypt using the Electronic Code Book mode.
- *
- * @link http://en.wikipedia.org/wiki/Block_cipher_modes_of_operation#Electronic_codebook_.28ECB.29
- */
-define('CRYPT_RIJNDAEL_MODE_ECB', CRYPT_MODE_ECB);
-/**
- * Encrypt / decrypt using the Code Book Chaining mode.
- *
- * @link http://en.wikipedia.org/wiki/Block_cipher_modes_of_operation#Cipher-block_chaining_.28CBC.29
- */
-define('CRYPT_RIJNDAEL_MODE_CBC', CRYPT_MODE_CBC);
-/**
- * Encrypt / decrypt using the Cipher Feedback mode.
- *
- * @link http://en.wikipedia.org/wiki/Block_cipher_modes_of_operation#Cipher_feedback_.28CFB.29
- */
-define('CRYPT_RIJNDAEL_MODE_CFB', CRYPT_MODE_CFB);
-/**
- * Encrypt / decrypt using the Cipher Feedback mode.
- *
- * @link http://en.wikipedia.org/wiki/Block_cipher_modes_of_operation#Output_feedback_.28OFB.29
- */
-define('CRYPT_RIJNDAEL_MODE_OFB', CRYPT_MODE_OFB);
-/**#@-*/
-
-/**#@+
- * @access private
- * @see Crypt_Rijndael::Crypt_Rijndael()
- */
-/**
- * Toggles the internal implementation
- */
-define('CRYPT_RIJNDAEL_MODE_INTERNAL', CRYPT_MODE_INTERNAL);
-/**
- * Toggles the mcrypt implementation
- */
-define('CRYPT_RIJNDAEL_MODE_MCRYPT', CRYPT_MODE_MCRYPT);
-/**#@-*/
-
 /**
  * Pure-PHP implementation of Rijndael.
  *
@@ -135,6 +82,59 @@ define('CRYPT_RIJNDAEL_MODE_MCRYPT', CRYPT_MODE_MCRYPT);
  * @package Rijndael
  */
 class Rijndael extends Base {
+    /**#@+
+     * @access public
+     * @see Crypt_Rijndael::encrypt()
+     * @see Crypt_Rijndael::decrypt()
+     */
+    /**
+     * Encrypt / decrypt using the Counter mode.
+     *
+     * Set to -1 since that's what Crypt/Random.php uses to index the CTR mode.
+     *
+     * @link http://en.wikipedia.org/wiki/Block_cipher_modes_of_operation#Counter_.28CTR.29
+     */
+    const CRYPT_RIJNDAEL_MODE_CTR = \PhpSecLib\Crypt\Base::CRYPT_MODE_CTR;
+    /**
+     * Encrypt / decrypt using the Electronic Code Book mode.
+     *
+     * @link http://en.wikipedia.org/wiki/Block_cipher_modes_of_operation#Electronic_codebook_.28ECB.29
+     */
+    const CRYPT_RIJNDAEL_MODE_ECB = \PhpSecLib\Crypt\Base::CRYPT_MODE_ECB;
+    /**
+     * Encrypt / decrypt using the Code Book Chaining mode.
+     *
+     * @link http://en.wikipedia.org/wiki/Block_cipher_modes_of_operation#Cipher-block_chaining_.28CBC.29
+     */
+    const CRYPT_RIJNDAEL_MODE_CBC = \PhpSecLib\Crypt\Base::CRYPT_MODE_CBC;
+    /**
+     * Encrypt / decrypt using the Cipher Feedback mode.
+     *
+     * @link http://en.wikipedia.org/wiki/Block_cipher_modes_of_operation#Cipher_feedback_.28CFB.29
+     */
+    const CRYPT_RIJNDAEL_MODE_CFB = \PhpSecLib\Crypt\Base::CRYPT_MODE_CFB;
+    /**
+     * Encrypt / decrypt using the Cipher Feedback mode.
+     *
+     * @link http://en.wikipedia.org/wiki/Block_cipher_modes_of_operation#Output_feedback_.28OFB.29
+     */
+    const CRYPT_RIJNDAEL_MODE_OFB = \PhpSecLib\Crypt\Base::CRYPT_MODE_OFB;
+    /**#@-*/
+
+    /**#@+
+     * @access private
+     * @see Crypt_Rijndael::Crypt_Rijndael()
+     */
+    /**
+     * Toggles the internal implementation
+     */
+    const CRYPT_RIJNDAEL_MODE_INTERNAL = \PhpSecLib\Crypt\Base::CRYPT_MODE_INTERNAL;
+    /**
+     * Toggles the mcrypt implementation
+     */
+    const CRYPT_RIJNDAEL_MODE_MCRYPT = \PhpSecLib\Crypt\Base::CRYPT_MODE_MCRYPT;
+    /**#@-*/
+
     /**
      * The default password key_size used by setPassword()
      *
@@ -676,23 +676,23 @@ class Rijndael extends Base {
      *
      * $mode could be:
      *
-     * - CRYPT_RIJNDAEL_MODE_ECB
+     * - \PhpSecLib\Crypt\Rijndael::CRYPT_RIJNDAEL_MODE_ECB
      *
-     * - CRYPT_RIJNDAEL_MODE_CBC
+     * - \PhpSecLib\Crypt\Rijndael::CRYPT_RIJNDAEL_MODE_CBC
      *
-     * - CRYPT_RIJNDAEL_MODE_CTR
+     * - \PhpSecLib\Crypt\Rijndael::CRYPT_RIJNDAEL_MODE_CTR
      *
-     * - CRYPT_RIJNDAEL_MODE_CFB
+     * - \PhpSecLib\Crypt\Rijndael::CRYPT_RIJNDAEL_MODE_CFB
      *
-     * - CRYPT_RIJNDAEL_MODE_OFB
+     * - \PhpSecLib\Crypt\Rijndael::CRYPT_RIJNDAEL_MODE_OFB
      *
-     * If not explictly set, CRYPT_RIJNDAEL_MODE_CBC will be used.
+     * If not explictly set, \PhpSecLib\Crypt\Rijndael::CRYPT_RIJNDAEL_MODE_CBC will be used.
      *
      * @see Crypt_Base::Crypt_Base()
      * @param optional Integer $mode
      * @access public
      */
-    function Crypt_Rijndael($mode = CRYPT_RIJNDAEL_MODE_CBC)
+    function Crypt_Rijndael($mode = \PhpSecLib\Crypt\Rijndael::CRYPT_RIJNDAEL_MODE_CBC)
     {
         parent::Crypt_Base($mode);
     }
@@ -816,7 +816,7 @@ class Rijndael extends Base {
      */
     function _setupEngine()
     {
-        if (constant('CRYPT_' . $this->const_namespace . '_MODE') == CRYPT_MODE_INTERNAL) {
+        if (constant('CRYPT_' . $this->const_namespace . '_MODE') == \PhpSecLib\Crypt\Base::CRYPT_MODE_INTERNAL) {
             // No mcrypt support at all for rijndael
             return;
         }
@@ -828,10 +828,10 @@ class Rijndael extends Base {
         switch (true) {
             case $this->key_size % 8: // mcrypt is not usable for 160/224-bit keys, only for 128/192/256-bit keys
             case !in_array($cipher_name_mcrypt, mcrypt_list_algorithms()): // $cipher_name_mcrypt is not available for the current $block_size
-                $engine = CRYPT_MODE_INTERNAL;
+                $engine = \PhpSecLib\Crypt\Base::CRYPT_MODE_INTERNAL;
                 break;
             default:
-                $engine = CRYPT_MODE_MCRYPT;
+                $engine = \PhpSecLib\Crypt\Base::CRYPT_MODE_MCRYPT;
         }
 
         if ($this->engine == $engine && $this->cipher_name_mcrypt == $cipher_name_mcrypt) {
@@ -859,7 +859,7 @@ class Rijndael extends Base {
     }
 
     /**
-     * Setup the CRYPT_MODE_MCRYPT $engine
+     * Setup the \PhpSecLib\Crypt\Base::CRYPT_MODE_MCRYPT $engine
      *
      * @see Crypt_Base::_setupMcrypt()
      * @access private
