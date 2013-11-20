@@ -29,14 +29,5 @@ function phpseclib_is_includable($suffix)
 	return false;
 }
 
-function phpseclib_autoload($class)
-{
-	$file = str_replace('_', '/', $class) . '.php';
-
-	if (phpseclib_is_includable($file))
-	{
-		require $file;
-	}
-}
-
-spl_autoload_register('phpseclib_autoload');
+require __DIR__ . '/../vendor/autoload.php';
+require __DIR__ . '/PhpseclibTestCase.php';

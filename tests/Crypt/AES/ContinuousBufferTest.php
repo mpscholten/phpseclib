@@ -5,14 +5,20 @@
  * @license    http://www.opensource.org/licenses/mit-license.html  MIT License
  */
 
-class Crypt_AES_ContinuousBufferTest extends Crypt_AES_TestCase
+namespace PhpSecLib\Test\Crypt\AES;
+
+use PhpSecLib\Crypt\AES;
+
+require_once __DIR__ . '/TestCase.php';
+
+class ContinuousBufferTest extends TestCase
 {
 	// String intented
-	protected $modes = array(
-		'CRYPT_AES_MODE_CTR',
-		'CRYPT_AES_MODE_OFB',
-		'CRYPT_AES_MODE_CFB',
-	);
+	protected $modes = [
+		AES::CRYPT_AES_MODE_CTR,
+		AES::CRYPT_AES_MODE_OFB,
+		AES::CRYPT_AES_MODE_CFB,
+	];
 
 	protected $plaintexts = array(
 		'',
@@ -55,7 +61,7 @@ class Crypt_AES_ContinuousBufferTest extends Crypt_AES_TestCase
 	*/
 	public function testEncryptDecrypt($mode, $plaintext, $iv, $key)
 	{
-		$aes = new Crypt_AES(constant($mode));
+		$aes = new AES($mode);
 		$aes->enableContinuousBuffer();
 		$aes->setIV($iv);
 		$aes->setKey($key);

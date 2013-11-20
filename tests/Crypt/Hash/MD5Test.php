@@ -5,11 +5,17 @@
  * @license    http://www.opensource.org/licenses/mit-license.html  MIT License
  */
 
-class Crypt_Hash_MD5Test extends Crypt_Hash_TestCase
+namespace PhpSecLib\Test\Crypt;
+
+use PhpSecLib\Crypt\Hash;
+
+require_once __DIR__ . '/TestCase.php';
+
+class Crypt_Hash_MD5Test extends TestCase
 {
 	public function getInstance()
 	{
-		return new Crypt_Hash('md5');
+		return new Hash('md5');
 	}
 
 	/**
