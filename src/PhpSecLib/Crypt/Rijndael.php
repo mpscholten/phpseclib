@@ -276,8 +276,8 @@ class Rijndael extends Base {
      * precomputed tables can be used in the mixColumns phase.  in that example, they're assigned t0...t3, so
      * those are the names we'll use.
      *
-     * @see Crypt_Rijndael:_encryptBlock()
-     * @see Crypt_Rijndael:_decryptBlock()
+     * @see __construct:_encryptBlock()
+     * @see __construct:_decryptBlock()
      * @var Array
      * @access private
      */
@@ -319,8 +319,8 @@ class Rijndael extends Base {
     /**
      * Precomputed mixColumns table
      *
-     * @see Crypt_Rijndael:_encryptBlock()
-     * @see Crypt_Rijndael:_decryptBlock()
+     * @see __construct:_encryptBlock()
+     * @see __construct:_decryptBlock()
      * @var Array
      * @access private
      */
@@ -362,8 +362,8 @@ class Rijndael extends Base {
     /**
      * Precomputed mixColumns table
      *
-     * @see Crypt_Rijndael:_encryptBlock()
-     * @see Crypt_Rijndael:_decryptBlock()
+     * @see __construct:_encryptBlock()
+     * @see __construct:_decryptBlock()
      * @var Array
      * @access private
      */
@@ -405,8 +405,8 @@ class Rijndael extends Base {
     /**
      * Precomputed mixColumns table
      *
-     * @see Crypt_Rijndael:_encryptBlock()
-     * @see Crypt_Rijndael:_decryptBlock()
+     * @see __construct:_encryptBlock()
+     * @see __construct:_decryptBlock()
      * @var Array
      * @access private
      */
@@ -448,8 +448,8 @@ class Rijndael extends Base {
     /**
      * Precomputed invMixColumns table
      *
-     * @see Crypt_Rijndael:_encryptBlock()
-     * @see Crypt_Rijndael:_decryptBlock()
+     * @see Rijndael:_encryptBlock()
+     * @see Rijndael:_decryptBlock()
      * @var Array
      * @access private
      */
@@ -491,8 +491,8 @@ class Rijndael extends Base {
     /**
      * Precomputed invMixColumns table
      *
-     * @see Crypt_Rijndael:_encryptBlock()
-     * @see Crypt_Rijndael:_decryptBlock()
+     * @see Rijndael:_encryptBlock()
+     * @see Rijndael:_decryptBlock()
      * @var Array
      * @access private
      */
@@ -534,8 +534,8 @@ class Rijndael extends Base {
     /**
      * Precomputed invMixColumns table
      *
-     * @see Crypt_Rijndael:_encryptBlock()
-     * @see Crypt_Rijndael:_decryptBlock()
+     * @see Rijndael:_encryptBlock()
+     * @see Rijndael:_decryptBlock()
      * @var Array
      * @access private
      */
@@ -577,8 +577,8 @@ class Rijndael extends Base {
     /**
      * Precomputed invMixColumns table
      *
-     * @see Crypt_Rijndael:_encryptBlock()
-     * @see Crypt_Rijndael:_decryptBlock()
+     * @see Rijndael:_encryptBlock()
+     * @see Rijndael:_decryptBlock()
      * @var Array
      * @access private
      */
@@ -692,9 +692,9 @@ class Rijndael extends Base {
      * @param optional Integer $mode
      * @access public
      */
-    function Crypt_Rijndael($mode = \PhpSecLib\Crypt\Rijndael::CRYPT_RIJNDAEL_MODE_CBC)
+    function __construct($mode = \PhpSecLib\Crypt\Rijndael::CRYPT_RIJNDAEL_MODE_CBC)
     {
-        parent::Crypt_Base($mode);
+        parent::__construct($mode);
     }
 
     /**

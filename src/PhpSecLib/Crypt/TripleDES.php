@@ -182,13 +182,13 @@ class TripleDES extends DES {
      * @param optional Integer $mode
      * @access public
      */
-    function Crypt_TripleDES($mode = \PhpSecLib\Crypt\DES::CRYPT_DES_MODE_CBC)
+    function __construct($mode = \PhpSecLib\Crypt\DES::CRYPT_DES_MODE_CBC)
     {
         switch ($mode) {
             // In case of \PhpSecLib\Crypt\TripleDES::CRYPT_DES_MODE_3CBC, we init as \PhpSecLib\Crypt\DES::CRYPT_DES_MODE_CBC
             // and additional flag us internally as 3CBC
             case \PhpSecLib\Crypt\TripleDES::CRYPT_DES_MODE_3CBC:
-                parent::Crypt_DES(\PhpSecLib\Crypt\DES::CRYPT_DES_MODE_CBC);
+                parent::__construct(\PhpSecLib\Crypt\DES::CRYPT_DES_MODE_CBC);
                 $this->mode_3cbc = true;
 
                 // This three $des'es will do the 3CBC work (if $key > 64bits)
@@ -205,7 +205,7 @@ class TripleDES extends DES {
                 break;
             // If not 3CBC, we init as usual
             default:
-                parent::Crypt_DES($mode);
+                parent::__construct($mode);
         }
     }
 

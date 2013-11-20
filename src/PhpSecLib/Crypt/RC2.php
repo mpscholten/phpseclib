@@ -19,7 +19,7 @@ namespace PhpSecLib\Crypt;
  * <?php
  *    include('Crypt/RC2.php');
  *
- *    $rc2 = new Crypt_RC2();
+ *    $rc2 = new RC2();
  *
  *    $rc2->setKey('abcdefgh');
  *
@@ -48,7 +48,7 @@ namespace PhpSecLib\Crypt;
  * THE SOFTWARE.
  *
  * @category   Crypt
- * @package    Crypt_RC2
+ * @package    RC2
  * @author     Patrick Monnerat <pm@datasphere.ch>
  * @license    http://www.opensource.org/licenses/mit-license.html  MIT License
  * @link       http://phpseclib.sourceforge.net
@@ -59,9 +59,9 @@ namespace PhpSecLib\Crypt;
  *
  * @version 0.1.1
  * @access  public
- * @package Crypt_RC2
+ * @package RC2
  */
-class Crypt_RC2 extends Base {
+class RC2 extends Base {
     /**#@+
      * @access public
      * @see Crypt_RC2::encrypt()
@@ -316,25 +316,25 @@ class Crypt_RC2 extends Base {
      *
      * $mode could be:
      *
-     * - \PhpSecLib\Crypt\Crypt_RC2::CRYPT_RC2_MODE_ECB
+     * - \PhpSecLib\Crypt\RC2::CRYPT_RC2_MODE_ECB
      *
-     * - \PhpSecLib\Crypt\Crypt_RC2::CRYPT_RC2_MODE_CBC
+     * - \PhpSecLib\Crypt\RC2::CRYPT_RC2_MODE_CBC
      *
-     * - \PhpSecLib\Crypt\Crypt_RC2::CRYPT_RC2_MODE_CTR
+     * - \PhpSecLib\Crypt\RC2::CRYPT_RC2_MODE_CTR
      *
-     * - \PhpSecLib\Crypt\Crypt_RC2::CRYPT_RC2_MODE_CFB
+     * - \PhpSecLib\Crypt\RC2::CRYPT_RC2_MODE_CFB
      *
-     * - \PhpSecLib\Crypt\Crypt_RC2::CRYPT_RC2_MODE_OFB
+     * - \PhpSecLib\Crypt\RC2::CRYPT_RC2_MODE_OFB
      *
-     * If not explictly set, \PhpSecLib\Crypt\Crypt_RC2::CRYPT_RC2_MODE_CBC will be used.
+     * If not explictly set, \PhpSecLib\Crypt\RC2::CRYPT_RC2_MODE_CBC will be used.
      *
      * @see Crypt_Base::Crypt_Base()
      * @param optional Integer $mode
      * @access public
      */
-    function Crypt_RC2($mode = \PhpSecLib\Crypt\Crypt_RC2::CRYPT_RC2_MODE_CBC)
+    function __construct($mode = \PhpSecLib\Crypt\RC2::CRYPT_RC2_MODE_CBC)
     {
-        parent::Crypt_Base($mode);
+        parent::__construct($mode);
         $this->setKey('');
     }
 
@@ -343,7 +343,7 @@ class Crypt_RC2 extends Base {
      *
      * Valid key lengths are 1 to 1024.
      * Calling this function after setting the key has no effect until the next
-     *  Crypt_RC2::setKey() call.
+     *  RC2::setKey() call.
      *
      * @access public
      * @param Integer $length in bits
@@ -508,7 +508,7 @@ class Crypt_RC2 extends Base {
      */
     function _setupKey()
     {
-        // Key has already been expanded in Crypt_RC2::setKey():
+        // Key has already been expanded in RC2::setKey():
         // Only the first value must be altered.
         $l = unpack('Ca/Cb/v*', $this->key);
         array_unshift($l, $this->pitable[$l['a']] | ($l['b'] << 8));
@@ -525,7 +525,7 @@ class Crypt_RC2 extends Base {
      */
     function _setupInlineCrypt()
     {
-        $lambda_functions = &Crypt_RC2::_getLambdaFunctions();
+        $lambda_functions = &RC2::_getLambdaFunctions();
 
         // The first 10 generated $lambda_functions will use the $keys hardcoded as integers
         // for the mixing rounds, for better inline crypt performance [~20% faster].
@@ -537,7 +537,7 @@ class Crypt_RC2 extends Base {
             }
         }
 
-        $code_hash = md5(str_pad("Crypt_RC2, {$this->mode}, ", 32, "\0") . implode(',', $keys));
+        $code_hash = md5(str_pad("RC2, {$this->mode}, ", 32, "\0") . implode(',', $keys));
 
         // Is there a re-usable $lambda_functions in there?
         // If not, we have to create it.

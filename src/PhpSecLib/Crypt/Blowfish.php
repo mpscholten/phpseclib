@@ -385,9 +385,9 @@ class Blowfish extends Base {
      * @param optional Integer $mode
      * @access public
      */
-    function Crypt_Blowfish($mode = \PhpSecLib\Crypt\Blowfish::CRYPT_BLOWFISH_MODE_CBC)
+    function __construct($mode = \PhpSecLib\Crypt\Blowfish::CRYPT_BLOWFISH_MODE_CBC)
     {
-        parent::Crypt_Base($mode);
+        parent::__construct($mode);
     }
 
     /**

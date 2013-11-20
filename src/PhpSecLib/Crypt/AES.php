@@ -159,9 +159,9 @@ class AES extends Rijndael {
      * @param optional Integer $mode
      * @access public
      */
-    function Crypt_AES($mode = \PhpSecLib\Crypt\AES::CRYPT_AES_MODE_CBC)
+    function __construct($mode = \PhpSecLib\Crypt\AES::CRYPT_AES_MODE_CBC)
     {
-        parent::Crypt_Rijndael($mode);
+        parent::__construct($mode);
     }
 
     /**

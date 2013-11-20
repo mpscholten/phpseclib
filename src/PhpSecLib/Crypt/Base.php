@@ -447,7 +447,7 @@ class Base {
      * @param optional Integer $mode
      * @access public
      */
-    function Crypt_Base($mode = \PhpSecLib\Crypt\Base::CRYPT_MODE_CBC)
+    function __construct($mode = \PhpSecLib\Crypt\Base::CRYPT_MODE_CBC)
     {
         $const_crypt_mode = 'CRYPT_' . $this->const_namespace . '_MODE';
 

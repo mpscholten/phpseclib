@@ -214,7 +214,7 @@ class ANSI {
      * @return ANSI
      * @access public
      */
-    function File_ANSI()
+    function __construct()
     {
         $this->setHistory(200);
         $this->setDimensions(80, 24);

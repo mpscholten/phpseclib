@@ -678,9 +678,9 @@ class DES extends Base {
      * @param optional Integer $mode
      * @access public
      */
-    function Crypt_DES($mode = \PhpSecLib\Crypt\DES::CRYPT_DES_MODE_CBC)
+    function __construct($mode = \PhpSecLib\Crypt\DES::CRYPT_DES_MODE_CBC)
     {
-        parent::Crypt_Base($mode);
+        parent::__construct($mode);
     }
 
     /**

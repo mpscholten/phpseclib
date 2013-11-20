@@ -464,9 +464,9 @@ class Twofish extends Base {
      * @param optional Integer $mode
      * @access public
      */
-    function Crypt_Twofish($mode = \PhpSecLib\Crypt\Twofish::CRYPT_TWOFISH_MODE_CBC)
+    function __construct($mode = \PhpSecLib\Crypt\Twofish::CRYPT_TWOFISH_MODE_CBC)
     {
-        parent::Crypt_Base($mode);
+        parent::__construct($mode);
     }
 
     /**

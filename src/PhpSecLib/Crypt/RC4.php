@@ -171,9 +171,9 @@ class RC4 extends Base {
      * @return RC4
      * @access public
      */
-    function Crypt_RC4()
+    function __construct()
     {
-        parent::Crypt_Base(\PhpSecLib\Crypt\Base::CRYPT_MODE_STREAM);
+        parent::__construct(\PhpSecLib\Crypt\Base::CRYPT_MODE_STREAM);
     }
 
     /**
