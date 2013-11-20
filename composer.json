@@ -39,11 +39,7 @@
     "include-path": ["phpseclib/"],
     "autoload": {
         "psr-0": {
-            "PhpSecLib": "src/",
-            "Crypt": "phpseclib/",
-            "File": "phpseclib/",
-            "Math": "phpseclib/",
-            "Net": "phpseclib/"
+            "PhpSecLib": "src/"
         },
         "files": [
             "src/PhpSecLib/Crypt/Random.php"
